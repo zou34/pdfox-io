@@ -110,6 +110,7 @@ async function handleFile(files) {
   }
 }
 
+// LA FONCTION CORRIGÉE EST ICI
 async function analyze() {
   if (!pdfText) { alert('Veuillez d\'abord selectionner un PDF.'); return; }
   if (aiRemaining() <= 0) { alert('Limite atteinte. Revenez demain !'); return; }
@@ -120,12 +121,23 @@ async function analyze() {
   document.getElementById('resultBox').style.display = 'none';
 
   try {
-    var systemPrompt = 'Tu es un expert en analyse documentaire. Reponds UNIQUEMENT en JSON valide, sans markdown ni backticks. Format exact: {"titre":"titre","type":"type","langue":"langue","resume":"resume en 2-3 phrases","points_cles":["point1","point2","point3"],"ton":"ton","temps_lecture":"X min"}';
+    // Appel sécurisé vers votre serveur Vercel (contourne le blocage)
+    var response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: pdfText })
+    });
 
-    var rawText = await callGemini(systemPrompt + '\n\nAnalyse ce document:\n\n' + pdfText);
+    var data = await response.json();
+    
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    var rawText = data.summary || data.text || JSON.stringify(data);
 
     var result;
-    try { result = JSON.parse(rawText.replace(/json|/g, '').trim()); }
+    try { result = JSON.parse(rawText.replace(/```json|```/g, '').trim()); }
     catch (e) { result = { titre: fileName, type: '—', langue: '—', resume: rawText, points_cles: [], ton: '—', temps_lecture: '—' }; }
 
     incAiUsage();
