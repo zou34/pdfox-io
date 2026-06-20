@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Résumeur IA — Analysez vos PDF avec Claude — PDFOX.io</title>
-  <meta name="description" content="Résumez n'importe quel PDF en 5 points clés grâce à l'IA Claude d'Anthropic. Gratuit, rapide, précis."/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Resumeur IA — PDFOX.io</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/style.css"/>
@@ -22,9 +22,9 @@
 </nav>
 
 <div class="p-hero" style="background:linear-gradient(160deg,var(--navy) 0%,#0a1a4a 100%)">
-  <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.3);border-radius:100px;padding:7px 16px;margin-bottom:18px;font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;position:relative">✨ Propulsé par Claude AI · Anthropic</div>
-  <h1>🧠 Résumeur IA</h1>
-  <p>Uploadez votre PDF et obtenez un résumé structuré en quelques secondes.<br>Gratuit · 3 analyses/jour · Aucune inscription</p>
+  <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.3);border-radius:100px;padding:7px 16px;margin-bottom:18px;font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px">✨ IA PDFOX</div>
+  <h1>🧠 Resumeur IA</h1>
+  <p>Uploadez votre PDF et obtenez un resume structure en quelques secondes.<br>Gratuit · 5 analyses/jour · Aucune inscription</p>
 </div>
 
 <div class="ai-page-main">
@@ -32,18 +32,18 @@
     <div class="ai-main-card fade-up">
       <div class="ai-upload-zone" id="uploadZone">
         <span class="ico">📄</span>
-        <h3>Déposez votre PDF ici</h3>
-        <p>ou cliquez pour sélectionner — Max 15 Mo</p>
+        <h3>Deposez votre PDF ici</h3>
+        <p>ou cliquez pour selectionner — Max 15 Mo</p>
         <input type="file" accept=".pdf" id="fileInput" style="display:none"/>
       </div>
       <div class="ai-file-info" id="fileInfo"></div>
-      <button class="ai-act-btn" id="actBtn" onclick="analyze()">✨ Analyser avec l'IA Claude</button>
+      <button class="ai-act-btn" id="actBtn" onclick="analyze()">✨ Analyser avec l'IA</button>
       <div class="ai-loader" id="loader">
         <div class="ai-dots"><span></span><span></span><span></span></div>
         <p>L'IA analyse votre document...</p>
       </div>
       <div class="ai-result" id="resultBox">
-        <h3>📋 Résumé de votre document</h3>
+        <h3>📋 Resume de votre document</h3>
         <div id="resultContent"></div>
         <button class="rst-btn" onclick="resetForm()">🔄 Analyser un autre document</button>
       </div>
@@ -51,28 +51,16 @@
     </div>
 
     <div style="margin:28px 0">
-      <div class="ad-slot" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.03);color:rgba(255,255,255,.3);min-height:90px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:13px">
-        <!-- AdSense · ai-summarizer --><span>📢 Espace Publicitaire — Google AdSense</span>
+      <div class="ad-slot" style="min-height:90px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:13px;color:rgba(255,255,255,.3)">
+        📢 Espace Publicitaire — Google AdSense
       </div>
     </div>
 
     <h3 style="font-family:'Syne',sans-serif;color:#fff;font-size:18px;margin-bottom:16px">Autres outils IA</h3>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:48px">
-      <a href="ai-chat.html" class="ai-card" style="padding:22px">
-        <span style="font-size:30px;display:block;margin-bottom:10px">💬</span>
-        <h3 style="font-size:15px">Chat PDF IA</h3>
-        <p style="font-size:13px">Posez des questions sur votre document</p>
-      </a>
-      <a href="ai-rewrite.html" class="ai-card" style="padding:22px">
-        <span style="font-size:30px;display:block;margin-bottom:10px">✏️</span>
-        <h3 style="font-size:15px">Réécriture IA</h3>
-        <p style="font-size:13px">Simplifiez ou formalisez votre texte</p>
-      </a>
-      <a href="ai-metadata.html" class="ai-card" style="padding:22px">
-        <span style="font-size:30px;display:block;margin-bottom:10px">🔎</span>
-        <h3 style="font-size:15px">Extracteur IA</h3>
-        <p style="font-size:13px">Détectez type, langue, données clés</p>
-      </a>
+      <a href="ai-chat.html" class="ai-card" style="padding:22px"><span style="font-size:30px;display:block;margin-bottom:10px">💬</span><h3 style="font-size:15px">Chat PDF IA</h3></a>
+      <a href="ai-rewrite.html" class="ai-card" style="padding:22px"><span style="font-size:30px;display:block;margin-bottom:10px">✏️</span><h3 style="font-size:15px">Reecriture IA</h3></a>
+      <a href="ai-metadata.html" class="ai-card" style="padding:22px"><span style="font-size:30px;display:block;margin-bottom:10px">🔎</span><h3 style="font-size:15px">Extracteur IA</h3></a>
     </div>
   </div>
 </div>
@@ -85,85 +73,86 @@
 </footer>
 
 <script src="../js/main.js"></script>
+<script src="../js/ai.js"></script>
 <script>
-pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-let pdfText='',fileName='';
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+var pdfText = '', fileName = '';
 
-function showUsage(){
-  const r=aiRemaining();
-  document.getElementById('usageTxt').textContent=r+' analyse'+(r>1?'s':'')+' gratuite'+(r>1?'s':'')+' restante'+(r>1?'s':'')+' aujourd\'hui';
+function showUsage() {
+  var r = aiRemaining();
+  document.getElementById('usageTxt').textContent = r + ' analyse(s) gratuite(s) restante(s) aujourd\'hui';
 }
 showUsage();
 
-initDragDrop('uploadZone','fileInput',handleFile);
+initDragDrop('uploadZone', 'fileInput', handleFile);
 
-async function handleFile(files){
-  const file=files[0];
-  if(!file?.name.endsWith('.pdf')){alert('Veuillez sélectionner un fichier PDF.');return;}
-  fileName=file.name;
-  const info=document.getElementById('fileInfo');
-  info.style.display='block';info.textContent='⏳ Extraction du texte de '+file.name+'...';
-  try{
-    const ab=await file.arrayBuffer(),pdf=await pdfjsLib.getDocument(ab).promise;
-    let text='';
-    for(let i=1;i<=Math.min(pdf.numPages,25);i++){
-      const pg=await pdf.getPage(i),ct=await pg.getTextContent();
-      text+=ct.items.map(it=>it.str).join(' ')+'\n';
+async function handleFile(files) {
+  var file = files[0];
+  if (!file || !file.name.endsWith('.pdf')) { alert('Veuillez selectionner un fichier PDF.'); return; }
+  fileName = file.name;
+  var info = document.getElementById('fileInfo');
+  info.style.display = 'block';
+  info.textContent = '⏳ Extraction du texte de ' + file.name + '...';
+  try {
+    var ab = await file.arrayBuffer();
+    var pdf = await pdfjsLib.getDocument(ab).promise;
+    var text = '';
+    for (var i = 1; i <= Math.min(pdf.numPages, 25); i++) {
+      var pg = await pdf.getPage(i);
+      var ct = await pg.getTextContent();
+      text += ct.items.map(function(it) { return it.str; }).join(' ') + '\n';
     }
-    pdfText=text.trim().substring(0,15000);
-    info.textContent='✅ '+file.name+' — '+pdf.numPages+' page'+(pdf.numPages>1?'s':'')+' — Texte extrait';
-    document.getElementById('actBtn').style.display='block';
-  }catch{
-    info.textContent='❌ Impossible d\'extraire le texte. Vérifiez que le PDF n\'est pas protégé.';
+    pdfText = text.trim().substring(0, 15000);
+    info.textContent = '✅ ' + file.name + ' — ' + pdf.numPages + ' page(s) — Texte extrait';
+    document.getElementById('actBtn').style.display = 'block';
+  } catch (e) {
+    info.textContent = '❌ Impossible d\'extraire le texte. PDF protege ?';
   }
 }
 
-async function analyze(){
-  if(!pdfText){alert('Veuillez d\'abord sélectionner un PDF.');return;}
-  if(aiRemaining()<=0){alert('Limite de 3 analyses gratuites atteinte. Revenez demain !');return;}
-  const btn=document.getElementById('actBtn');
-  btn.disabled=true;
-  document.getElementById('loader').style.display='block';
-  document.getElementById('resultBox').style.display='none';
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        system:`Tu es un expert en analyse documentaire. Réponds UNIQUEMENT en JSON valide, sans markdown ni backticks.
-Format exact: {"titre":"titre du document","type":"type (contrat/rapport/article/facture/autre)","langue":"langue","resume":"résumé en 2-3 phrases","points_cles":["point 1","point 2","point 3","point 4","point 5"],"ton":"ton (formel/technique/académique/informel)","temps_lecture":"X min"}`,
-        messages:[{role:'user',content:'Analyse ce document :\n\n'+pdfText}]
-      })
-    });
-    const data=await res.json();
-    const raw=data.content?.find(b=>b.type==='text')?.text||'{}';
-    let result;
-    try{result=JSON.parse(raw.replace(/```json|```/g,'').trim());}
-    catch{result={titre:fileName,type:'—',langue:'—',resume:raw,points_cles:[],ton:'—',temps_lecture:'—'};}
-    incAiUsage();showUsage();
-    document.getElementById('resultContent').innerHTML=`
-      <div class="r-item"><strong>📄 Titre :</strong> ${result.titre||'—'}</div>
-      <div class="r-item"><strong>📂 Type :</strong> ${result.type||'—'} &nbsp;|&nbsp; <strong>🌐 Langue :</strong> ${result.langue||'—'} &nbsp;|&nbsp; <strong>⏱️ Lecture :</strong> ${result.temps_lecture||'—'}</div>
-      <div class="r-item"><strong>📝 Résumé :</strong><br/><span style="color:rgba(255,255,255,.7)">${result.resume||'—'}</span></div>
-      ${result.points_cles?.length?`<div class="r-item"><strong>🎯 Points clés :</strong><ul>${result.points_cles.map(p=>`<li>${p}</li>`).join('')}</ul></div>`:''}
-      <div class="r-item"><strong>🎭 Ton :</strong> ${result.ton||'—'}</div>`;
-    document.getElementById('resultBox').style.display='block';
-  }catch(e){
-    alert('Erreur lors de l\'analyse. Vérifiez votre connexion et réessayez.');
-    btn.disabled=false;
+async function analyze() {
+  if (!pdfText) { alert('Veuillez d\'abord selectionner un PDF.'); return; }
+  if (aiRemaining() <= 0) { alert('Limite atteinte. Revenez demain !'); return; }
+
+  var btn = document.getElementById('actBtn');
+  btn.disabled = true;
+  document.getElementById('loader').style.display = 'block';
+  document.getElementById('resultBox').style.display = 'none';
+
+  try {
+    var systemPrompt = 'Tu es un expert en analyse documentaire. Reponds UNIQUEMENT en JSON valide, sans markdown ni backticks. Format exact: {"titre":"titre","type":"type","langue":"langue","resume":"resume en 2-3 phrases","points_cles":["point1","point2","point3"],"ton":"ton","temps_lecture":"X min"}';
+
+    var rawText = await callGemini(systemPrompt + '\n\nAnalyse ce document:\n\n' + pdfText);
+
+    var result;
+    try { result = JSON.parse(rawText.replace(/json|/g, '').trim()); }
+    catch (e) { result = { titre: fileName, type: '—', langue: '—', resume: rawText, points_cles: [], ton: '—', temps_lecture: '—' }; }
+
+    incAiUsage();
+    showUsage();
+
+    document.getElementById('resultContent').innerHTML =
+      '<div class="r-item"><strong>📄 Titre:</strong> ' + (result.titre || '—') + '</div>' +
+      '<div class="r-item"><strong>📂 Type:</strong> ' + (result.type || '—') + ' | <strong>🌐 Langue:</strong> ' + (result.langue || '—') + ' | <strong>⏱️ Lecture:</strong> ' + (result.temps_lecture || '—') + '</div>' +
+      '<div class="r-item"><strong>📝 Resume:</strong><br><span style="color:rgba(255,255,255,.7)">' + (result.resume || '—') + '</span></div>' +
+      (result.points_cles && result.points_cles.length ? '<div class="r-item"><strong>🎯 Points cles:</strong><ul>' + result.points_cles.map(function(p) { return '<li>' + p + '</li>'; }).join('') + '</ul></div>' : '') +
+      '<div class="r-item"><strong>🎭 Ton:</strong> ' + (result.ton || '—') + '</div>';
+    document.getElementById('resultBox').style.display = 'block';
+
+  } catch (e) {
+    alert('Erreur: ' + (e.message || 'Reessayez.'));
+    btn.disabled = false;
   }
-  document.getElementById('loader').style.display='none';
+  document.getElementById('loader').style.display = 'none';
 }
 
-function resetForm(){
-  pdfText='';fileName='';
-  document.getElementById('fileInfo').style.display='none';
-  document.getElementById('actBtn').style.display='none';
-  document.getElementById('actBtn').disabled=false;
-  document.getElementById('resultBox').style.display='none';
-  document.getElementById('fileInput').value='';
+function resetForm() {
+  pdfText = ''; fileName = '';
+  document.getElementById('fileInfo').style.display = 'none';
+  document.getElementById('actBtn').style.display = 'none';
+  document.getElementById('actBtn').disabled = false;
+  document.getElementById('resultBox').style.display = 'none';
+  document.getElementById('fileInput').value = '';
   showUsage();
 }
 </script>
