@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Chat PDF IA — Posez des questions sur vos PDF — PDFOX.io</title>
+  <meta name="description" content="Posez n'importe quelle question sur votre PDF. L'IA Claude répond avec précision et cite les pages sources."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body class="ai-page-bg">
+<nav id="navbar">
+  <a class="nav-logo" href="../index.html"><div class="logo-icon">🦊</div><span class="logo-text">PDF<span class="logo-accent">OX</span>.io</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../index.html#tools">Outils PDF</a></li>
+    <li><a href="../index.html#ai" class="ai-link">✨ IA</a></li>
+    <li><a href="../index.html#tools" class="nav-cta">Tous les outils →</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="p-hero" style="background:linear-gradient(160deg,var(--navy) 0%,#0a1a4a 100%)">
+  <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.3);border-radius:100px;padding:7px 16px;margin-bottom:18px;font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;position:relative">✨ Propulsé par Claude AI</div>
+  <h1>💬 Chat avec votre PDF</h1>
+  <p>Uploadez un PDF et posez toutes vos questions.<br>L'IA Claude répond avec précision en citant les pages sources.</p>
+</div>
+
+<div class="ai-page-main">
+  <div class="ai-page-wrap">
+    <div class="ai-main-card fade-up">
+
+      <!-- Étape 1 : Upload -->
+      <div id="step1">
+        <div class="ai-upload-zone" id="uploadZone">
+          <span class="ico">📄</span>
+          <h3>Déposez votre PDF ici</h3>
+          <p>ou cliquez pour sélectionner — Max 15 Mo</p>
+          <input type="file" accept=".pdf" id="fileInput" style="display:none"/>
+        </div>
+        <div class="ai-file-info" id="fileInfo"></div>
+        <button class="ai-act-btn" id="loadBtn" onclick="loadDoc()">💬 Démarrer le chat</button>
+        <div class="ai-loader" id="loader1">
+          <div class="ai-dots"><span></span><span></span><span></span></div>
+          <p>Chargement du document...</p>
+        </div>
+      </div>
+
+      <!-- Étape 2 : Chat -->
+      <div id="step2" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+          <div style="font-family:'Syne',sans-serif;color:#fff;font-size:15px;font-weight:800" id="docName">Document chargé</div>
+          <button onclick="resetChat()" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);border:none;padding:7px 14px;border-radius:9px;font-size:13px;cursor:pointer">🔄 Changer de PDF</button>
+        </div>
+
+        <!-- Suggestions -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px" id="suggestions">
+          <button class="suggest-btn" onclick="suggest(this)">Quel est le sujet principal ?</button>
+          <button class="suggest-btn" onclick="suggest(this)">Résume ce document en 3 points</button>
+          <button class="suggest-btn" onclick="suggest(this)">Quelles sont les dates importantes ?</button>
+          <button class="suggest-btn" onclick="suggest(this)">Qui sont les personnes mentionnées ?</button>
+        </div>
+
+        <div class="chat-msgs" id="chatMsgs">
+          <div class="msg msg-ai"><strong>🤖 Assistant PDFOX</strong>Document chargé avec succès ! Posez-moi n'importe quelle question sur ce document.</div>
+        </div>
+
+        <div class="chat-bar">
+          <input type="text" id="chatInput" placeholder="Posez une question sur votre document..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+          <button class="chat-send" onclick="sendMsg()">➤</button>
+        </div>
+        <div class="usage-txt" id="usageTxt"></div>
+      </div>
+    </div>
+
+    <div style="margin:28px 0">
+      <div class="ad-slot" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.03);color:rgba(255,255,255,.3);min-height:90px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:13px">
+        <!-- AdSense · ai-chat --><span>📢 Espace Publicitaire — Google AdSense</span>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Syne',sans-serif;color:#fff;font-size:18px;margin-bottom:16px">Autres outils IA</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:48px">
+      <a href="ai-summarizer.html" class="ai-card" style="padding:22px"><span style="font-size:30px;display:block;margin-bottom:10px">🧠</span><h3 style="font-size:15px">Résumeur IA</h3><p style="font-size:13px">Résumé en 5 points clés</p></a>
+      <a href="ai-rewrite.html" class="ai-card" style="padding:22px"><span style="font-size:30px;display:block;margin-bottom:10px">✏️</span><h3 style="font-size:15px">Réécriture IA</h3><p style="font-size:13px">Simplifiez ou formalisez</p></a>
+      <a href="ai-metadata.html" class="ai-card" style="padding:22px"><span style="font-size:30px;display:block;margin-bottom:10px">🔎</span><h3 style="font-size:15px">Extracteur IA</h3><p style="font-size:13px">Détectez les données clés</p></a>
+    </div>
+  </div>
+</div>
+
+<footer style="background:var(--navy);padding:28px 24px">
+  <div style="max-width:760px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid rgba(255,255,255,.07);padding-top:24px">
+    <a href="../index.html" class="nav-logo"><div class="logo-icon">🦊</div><span class="logo-text">PDF<span class="logo-accent">OX</span>.io</span></a>
+    <span style="color:rgba(255,255,255,.3);font-size:13px">© 2026 PDFOX.io</span>
+  </div>
+</footer>
+
+<style>
+.suggest-btn{background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.25);color:var(--gold);padding:7px 14px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;transition:.2s}
+.suggest-btn:hover{background:rgba(255,215,0,.2)}
+</style>
+
+<script src="../js/main.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let pdfText='',history=[];
+
+function showUsage(){
+  const r=aiRemaining();
+  document.getElementById('usageTxt').textContent=r+' question'+(r>1?'s':'')+' gratuite'+(r>1?'s':'')+' restante'+(r>1?'s':'')+' aujourd\'hui';
+}
+
+initDragDrop('uploadZone','fileInput',handleFile);
+
+async function handleFile(files){
+  const file=files[0];
+  if(!file?.name.endsWith('.pdf')){alert('Veuillez sélectionner un fichier PDF.');return;}
+  const info=document.getElementById('fileInfo');
+  info.style.display='block';info.textContent='⏳ Chargement de '+file.name+'...';
+  document.getElementById('loadBtn').style.display='block';
+  try{
+    const ab=await file.arrayBuffer(),pdf=await pdfjsLib.getDocument(ab).promise;
+    let text='';
+    for(let i=1;i<=Math.min(pdf.numPages,25);i++){
+      const pg=await pdf.getPage(i),ct=await pg.getTextContent();
+      text+=`[Page ${i}] `+ct.items.map(it=>it.str).join(' ')+'\n';
+    }
+    pdfText=text.trim().substring(0,15000);
+    info.textContent='✅ '+file.name+' — '+pdf.numPages+' pages chargées';
+    document.getElementById('docName').textContent='📄 '+file.name;
+  }catch{
+    info.textContent='❌ Erreur de chargement. Vérifiez que le PDF n\'est pas protégé.';
+  }
+}
+
+function loadDoc(){
+  if(!pdfText){alert('Veuillez d\'abord sélectionner un PDF.');return;}
+  document.getElementById('step1').style.display='none';
+  document.getElementById('step2').style.display='block';
+  showUsage();
+}
+
+function suggest(btn){
+  document.getElementById('chatInput').value=btn.textContent;
+  sendMsg();
+}
+
+async function sendMsg(){
+  const inp=document.getElementById('chatInput'),q=inp.value.trim();
+  if(!q)return;
+  if(aiRemaining()<=0){alert('Limite atteinte. Revenez demain !');return;}
+
+  addMsg(q,'user');inp.value='';
+  const typing=addMsg('...','ai',true);
+
+  history.push({role:'user',content:q});
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:600,
+        system:`Tu es un assistant expert qui répond aux questions sur un document PDF.
+Réponds en français de manière concise et précise.
+Cite les numéros de page quand c'est pertinent (ex: "Selon la page 3...").
+Si l'information n'est pas dans le document, dis-le clairement.
+Voici le contenu du document :\n\n${pdfText}`,
+        messages:history
+      })
+    });
+    const data=await res.json();
+    const answer=data.content?.find(b=>b.type==='text')?.text||'Désolé, je n\'ai pas pu analyser ce document.';
+    history.push({role:'assistant',content:answer});
+    incAiUsage();showUsage();
+    typing.textContent=answer;
+    typing.querySelector('strong').textContent='🤖 Assistant PDFOX';
+  }catch{
+    typing.textContent='Erreur de connexion. Vérifiez votre connexion et réessayez.';
+  }
+  scrollChat();
+}
+
+function addMsg(text,type,isTyping=false){
+  const msgs=document.getElementById('chatMsgs');
+  const div=document.createElement('div');
+  div.className='msg msg-'+type;
+  if(type==='ai')div.innerHTML=`<strong>🤖 Assistant PDFOX</strong>${text}`;
+  else div.textContent=text;
+  msgs.appendChild(div);
+  scrollChat();
+  return div;
+}
+
+function scrollChat(){
+  const m=document.getElementById('chatMsgs');m.scrollTop=m.scrollHeight;
+}
+
+function resetChat(){
+  pdfText='';history=[];
+  document.getElementById('step1').style.display='block';
+  document.getElementById('step2').style.display='none';
+  document.getElementById('fileInfo').style.display='none';
+  document.getElementById('loadBtn').style.display='none';
+  document.getElementById('fileInput').value='';
+  document.getElementById('chatMsgs').innerHTML='<div class="msg msg-ai"><strong>🤖 Assistant PDFOX</strong>Document chargé avec succès ! Posez-moi n\'importe quelle question sur ce document.</div>';
+}
+</script>
+</body>
+</html>

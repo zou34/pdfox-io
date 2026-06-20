@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Réécriture IA — Simplifiez vos textes PDF — PDFOX.io</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body class="ai-page-bg">
+<nav id="navbar">
+  <a class="nav-logo" href="../index.html"><div class="logo-icon">🦊</div><span class="logo-text">PDF<span class="logo-accent">OX</span>.io</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../index.html#tools">Outils PDF</a></li>
+    <li><a href="../index.html#ai" class="ai-link">✨ IA</a></li>
+    <li><a href="../index.html#tools" class="nav-cta">Tous les outils →</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="p-hero" style="background:linear-gradient(160deg,var(--navy) 0%,#0a1a4a 100%)">
+  <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.3);border-radius:100px;padding:7px 16px;margin-bottom:18px;font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px">✨ Propulsé par Claude AI</div>
+  <h1>✏️ Réécriture IA</h1>
+  <p>Collez votre texte PDF et transformez-le en quelques secondes.<br>Simplifier · Formaliser · Traduire · Résumer</p>
+</div>
+
+<div class="ai-page-main">
+  <div class="ai-page-wrap">
+    <div class="ai-main-card fade-up">
+
+      <div class="form-group">
+        <label style="color:#fff;font-size:14px;font-weight:700;margin-bottom:10px;display:block">Mode de réécriture :</label>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px" id="modeGrid">
+          <button class="mode-btn active" data-mode="simplify" onclick="setMode(this)">🧒 Simplifier</button>
+          <button class="mode-btn" data-mode="formalize" onclick="setMode(this)">👔 Formaliser</button>
+          <button class="mode-btn" data-mode="summarize" onclick="setMode(this)">📝 Résumer</button>
+          <button class="mode-btn" data-mode="translate_fr" onclick="setMode(this)">🇫🇷 → Français</button>
+          <button class="mode-btn" data-mode="translate_en" onclick="setMode(this)">🇬🇧 → Anglais</button>
+          <button class="mode-btn" data-mode="bullets" onclick="setMode(this)">📌 En bullet points</button>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:20px">
+        <label style="color:#fff;font-size:14px;font-weight:700;margin-bottom:8px;display:block">Texte à réécrire :</label>
+        <textarea id="inputText" placeholder="Collez votre texte ici (extrait d'un PDF, email, rapport...)&#10;&#10;Conseil : Vous pouvez d'abord utiliser l'outil PDF vers Word, copier le texte, puis le coller ici." style="width:100%;min-height:180px;padding:14px 16px;border:1.5px solid rgba(255,255,255,.15);border-radius:14px;background:rgba(255,255,255,.06);color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;resize:vertical;outline:none;transition:.2s;line-height:1.6" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'"></textarea>
+        <div style="text-align:right;font-size:12px;color:rgba(255,255,255,.3);margin-top:4px"><span id="charCnt">0</span> caractères</div>
+      </div>
+
+      <button class="ai-act-btn" id="rewriteBtn" onclick="rewrite()" style="display:block">✨ Réécrire avec l'IA</button>
+
+      <div class="ai-loader" id="loader">
+        <div class="ai-dots"><span></span><span></span><span></span></div>
+        <p>L'IA réécrit votre texte...</p>
+      </div>
+
+      <div class="ai-result" id="resultBox">
+        <h3>✅ Texte réécrit</h3>
+        <div class="r-item" id="resultText" style="white-space:pre-wrap;line-height:1.8"></div>
+        <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+          <button onclick="copyResult()" style="background:var(--blue);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:600;font-size:13px;cursor:pointer;transition:.2s" onmouseover="this.style.background='var(--blue2)'" onmouseout="this.style.background='var(--blue)'">📋 Copier</button>
+          <button onclick="downloadResult()" style="background:rgba(255,255,255,.1);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:600;font-size:13px;cursor:pointer;transition:.2s">⬇️ Télécharger .txt</button>
+          <button class="rst-btn" onclick="resetRewrite()">🔄 Nouveau texte</button>
+        </div>
+      </div>
+
+      <div class="usage-txt" id="usageTxt"></div>
+    </div>
+
+    <div style="margin:28px 0">
+      <div class="ad-slot" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.03);color:rgba(255,255,255,.3);min-height:90px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:13px">
+        <!-- AdSense · ai-rewrite --><span>📢 Espace Publicitaire — Google AdSense</span>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Syne',sans-serif;color:#fff;font-size:18px;margin-bottom:16px">Autres outils IA</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:48px">
+      <a href="ai-summarizer.html" class="ai-card" style="padding:22px"><span style="font-size:30px;display:block;margin-bottom:10px">🧠</span><h3 style="font-size:15px">Résumeur IA</h3></a>
+      <a href="ai-chat.html" class="ai-card" style="padding:22px"><span style="font-size:30px;display:block;margin-bottom:10px">💬</span><h3 style="font-size:15px">Chat PDF IA</h3></a>
+      <a href="ai-metadata.html" class="ai-card" style="padding:22px"><span style="font-size:30px;display:block;margin-bottom:10px">🔎</span><h3 style="font-size:15px">Extracteur IA</h3></a>
+    </div>
+  </div>
+</div>
+
+<footer style="background:var(--navy);padding:28px 24px">
+  <div style="max-width:760px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid rgba(255,255,255,.07);padding-top:24px">
+    <a href="../index.html" class="nav-logo"><div class="logo-icon">🦊</div><span class="logo-text">PDF<span class="logo-accent">OX</span>.io</span></a>
+    <span style="color:rgba(255,255,255,.3);font-size:13px">© 2026 PDFOX.io</span>
+  </div>
+</footer>
+
+<style>
+.mode-btn{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);padding:10px 14px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif}
+.mode-btn:hover{border-color:var(--gold);color:var(--gold)}
+.mode-btn.active{background:rgba(255,215,0,.15);border-color:var(--gold);color:var(--gold)}
+</style>
+
+<script src="../js/main.js"></script>
+<script>
+let currentMode='simplify';
+const MODES={
+  simplify:{label:'Simplifier',prompt:'Réécris ce texte de manière simple et facile à comprendre pour quelqu\'un sans expertise. Utilise des phrases courtes et un vocabulaire accessible.'},
+  formalize:{label:'Formaliser',prompt:'Réécris ce texte de manière formelle et professionnelle, adapté à un contexte d\'entreprise ou administratif.'},
+  summarize:{label:'Résumer',prompt:'Résume ce texte en 3 phrases maximum en conservant les informations essentielles.'},
+  translate_fr:{label:'Traduire en français',prompt:'Traduis ce texte en français correct et naturel.'},
+  translate_en:{label:'Translate to English',prompt:'Translate this text into correct, natural English.'},
+  bullets:{label:'Bullet points',prompt:'Transforme ce texte en une liste de bullet points clairs et concis, un point par idée importante.'},
+};
+
+function setMode(btn){
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentMode=btn.dataset.mode;
+}
+
+document.getElementById('inputText').addEventListener('input',function(){
+  document.getElementById('charCnt').textContent=this.value.length;
+});
+
+function showUsage(){
+  const r=aiRemaining();
+  document.getElementById('usageTxt').textContent=r+' réécriture'+(r>1?'s':'')+' gratuite'+(r>1?'s':'')+' restante'+(r>1?'s':'')+' aujourd\'hui';
+}
+showUsage();
+
+async function rewrite(){
+  const text=document.getElementById('inputText').value.trim();
+  if(!text||text.length<10){alert('Veuillez saisir du texte à réécrire (minimum 10 caractères).');return;}
+  if(aiRemaining()<=0){alert('Limite de 3 réécritures gratuites atteinte. Revenez demain !');return;}
+  const btn=document.getElementById('rewriteBtn');
+  btn.disabled=true;
+  document.getElementById('loader').style.display='block';
+  document.getElementById('resultBox').style.display='none';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:800,
+        system:'Tu es un expert en rédaction et communication. Réponds uniquement avec le texte réécrit, sans introduction ni explication.',
+        messages:[{role:'user',content:MODES[currentMode].prompt+'\n\nTexte :\n'+text}]
+      })
+    });
+    const data=await res.json();
+    const result=data.content?.find(b=>b.type==='text')?.text||'Erreur lors de la réécriture.';
+    incAiUsage();showUsage();
+    document.getElementById('resultText').textContent=result;
+    document.getElementById('resultBox').style.display='block';
+  }catch{
+    alert('Erreur de connexion. Réessayez.');
+    btn.disabled=false;
+  }
+  document.getElementById('loader').style.display='none';
+}
+
+function copyResult(){
+  const txt=document.getElementById('resultText').textContent;
+  navigator.clipboard.writeText(txt).then(()=>alert('✅ Texte copié dans le presse-papiers !'));
+}
+function downloadResult(){
+  const txt=document.getElementById('resultText').textContent;
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='pdfox-rewrite.txt';a.click();
+}
+function resetRewrite(){
+  document.getElementById('inputText').value='';
+  document.getElementById('charCnt').textContent='0';
+  document.getElementById('resultBox').style.display='none';
+  document.getElementById('rewriteBtn').disabled=false;
+  showUsage();
+}
+</script>
+</body>
+</html>

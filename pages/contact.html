@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Contact — PDFOX.io</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body>
+<nav id="navbar">
+  <a class="nav-logo" href="../index.html"><div class="logo-icon">🦊</div><span class="logo-text">PDF<span class="logo-accent">OX</span>.io</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../index.html#tools">Outils PDF</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="about.html">À propos</a></li>
+    <li><a href="../index.html#tools" class="nav-cta">Essayer →</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="p-hero">
+  <h1 class="fade-up">💬 Contactez-nous</h1>
+  <p class="fade-up delay-1">Une question, un bug, une suggestion ? Nous répondons sous 24 heures.</p>
+</div>
+
+<section style="background:var(--off);padding:70px 24px">
+  <div style="max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1.6fr;gap:40px;align-items:start">
+
+    <!-- Info -->
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div style="background:linear-gradient(135deg,var(--blue),var(--blue2));border-radius:18px;padding:28px;text-align:center;color:#fff">
+        <span style="font-family:'Syne',sans-serif;font-size:42px;font-weight:900;display:block">⚡ 24h</span>
+        <p style="font-size:14px;opacity:.85">Temps de réponse moyen garanti</p>
+      </div>
+      <div style="background:#fff;border-radius:18px;padding:24px;border:1.5px solid var(--border)">
+        <span style="font-size:28px;display:block;margin-bottom:10px">📧</span>
+        <h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:6px">Email général</h3>
+        <a href="mailto:hello@pdfox.io" style="color:var(--blue);font-size:14px;font-weight:600">hello@pdfox.io</a>
+      </div>
+      <div style="background:#fff;border-radius:18px;padding:24px;border:1.5px solid var(--border)">
+        <span style="font-size:28px;display:block;margin-bottom:10px">🐛</span>
+        <h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:6px">Signaler un bug</h3>
+        <a href="mailto:bugs@pdfox.io" style="color:var(--blue);font-size:14px;font-weight:600">bugs@pdfox.io</a>
+      </div>
+      <div style="background:#fff;border-radius:18px;padding:24px;border:1.5px solid var(--border)">
+        <span style="font-size:28px;display:block;margin-bottom:10px">🤝</span>
+        <h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:6px">Partenariats</h3>
+        <a href="mailto:partners@pdfox.io" style="color:var(--blue);font-size:14px;font-weight:600">partners@pdfox.io</a>
+      </div>
+    </div>
+
+    <!-- Formulaire -->
+    <div style="background:#fff;border-radius:24px;padding:40px;border:1.5px solid var(--border)">
+      <h2 style="font-family:'Syne',sans-serif;font-size:22px;margin-bottom:6px">Envoyez un message</h2>
+      <p style="color:var(--gray);font-size:14px;margin-bottom:28px">Réponse garantie sous 24h.</p>
+
+      <div class="form-row">
+        <div class="form-group"><label>Prénom *</label><input type="text" id="fname" placeholder="Jean"/></div>
+        <div class="form-group"><label>Nom *</label><input type="text" id="lname" placeholder="Dupont"/></div>
+      </div>
+      <div class="form-group"><label>Email *</label><input type="email" id="email" placeholder="jean@email.com"/></div>
+      <div class="form-group">
+        <label>Sujet *</label>
+        <select id="subject">
+          <option value="">— Choisissez un sujet —</option>
+          <option value="bug">🐛 Signaler un bug</option>
+          <option value="question">❓ Question sur un outil</option>
+          <option value="suggestion">💡 Suggestion</option>
+          <option value="partenariat">🤝 Partenariat</option>
+          <option value="rgpd">🔒 Demande RGPD</option>
+          <option value="autre">✉️ Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Message *</label>
+        <textarea id="message" placeholder="Décrivez votre demande en détail..." oninput="document.getElementById('cnt').textContent=this.value.length"></textarea>
+        <div style="text-align:right;font-size:11px;color:var(--gray);margin-top:4px"><span id="cnt">0</span>/1000 caractères</div>
+      </div>
+      <div class="form-group" style="display:flex;align-items:flex-start;gap:10px">
+        <input type="checkbox" id="consent" style="width:auto;margin-top:3px;flex-shrink:0"/>
+        <label for="consent" style="font-weight:400;color:var(--gray);cursor:pointer;font-size:13px">J'accepte que mes données soient utilisées pour traiter ma demande. <a href="privacy.html" style="color:var(--blue)">Politique de confidentialité</a></label>
+      </div>
+      <button id="submitBtn" onclick="submitForm()" style="width:100%;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border:none;padding:16px;border-radius:13px;font-family:'Syne',sans-serif;font-weight:800;font-size:16px;cursor:pointer;transition:.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">📨 Envoyer le message</button>
+      <div id="successMsg" style="display:none;background:rgba(16,185,129,.08);border:1.5px solid rgba(16,185,129,.3);border-radius:13px;padding:20px;text-align:center;color:#059669;font-weight:600;margin-top:16px">
+        <span style="font-size:28px;display:block;margin-bottom:8px">✅</span>
+        Message envoyé ! Nous vous répondrons sous 24h.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FAQ rapide -->
+  <div style="max-width:720px;margin:52px auto 0">
+    <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:900;margin-bottom:22px">Questions fréquentes</h2>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">PDFOX.io est-il vraiment gratuit ?<span class="faq-arr">▼</span></button><div class="faq-a"><div class="faq-a-in">Oui, les 16 outils PDF essentiels sont entièrement gratuits, sans limite de fichiers. La plateforme est financée par Google AdSense. Les fonctionnalités IA avancées ont une limite de 3 utilisations gratuites par jour.</div></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Mes fichiers sont-ils en sécurité ?<span class="faq-arr">▼</span></button><div class="faq-a"><div class="faq-a-in">Absolument. La plupart des traitements PDF se font dans votre navigateur — vos fichiers ne quittent jamais votre appareil. Pour les fonctions nécessitant un serveur, les fichiers sont supprimés automatiquement après 1 heure.</div></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Un outil ne fonctionne pas, que faire ?<span class="faq-arr">▼</span></button><div class="faq-a"><div class="faq-a-in">Vérifiez d'abord que votre fichier PDF n'est pas protégé par mot de passe. Si le problème persiste, utilisez le formulaire ci-dessus en choisissant "Signaler un bug" et décrivez le problème.</div></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Puis-je utiliser PDFOX pour un usage professionnel ?<span class="faq-arr">▼</span></button><div class="faq-a"><div class="faq-a-in">Oui, PDFOX est libre d'utilisation pour usage personnel et professionnel. Pour des besoins d'entreprise à très haut volume ou une intégration API, contactez-nous à partners@pdfox.io.</div></div></div>
+  </div>
+</section>
+
+<footer style="background:var(--navy);padding:28px 24px">
+  <div style="max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid rgba(255,255,255,.07);padding-top:24px">
+    <a href="../index.html" class="nav-logo"><div class="logo-icon">🦊</div><span class="logo-text">PDF<span class="logo-accent">OX</span>.io</span></a>
+    <div style="display:flex;gap:20px;font-size:13px">
+      <a href="privacy.html" style="color:rgba(255,255,255,.4)">Confidentialité</a>
+      <a href="terms.html" style="color:rgba(255,255,255,.4)">CGU</a>
+    </div>
+    <span style="color:rgba(255,255,255,.3);font-size:13px">© 2026 PDFOX.io</span>
+  </div>
+</footer>
+<script src="../js/main.js"></script>
+<script>
+function submitForm(){
+  const f=document.getElementById('fname').value.trim(),l=document.getElementById('lname').value.trim(),
+    e=document.getElementById('email').value.trim(),s=document.getElementById('subject').value,
+    m=document.getElementById('message').value.trim(),c=document.getElementById('consent').checked;
+  if(!f||!l||!e||!s||!m){alert('Veuillez remplir tous les champs obligatoires (*).');return;}
+  if(!e.includes('@')){alert('Email invalide.');return;}
+  if(!c){alert('Veuillez accepter la politique de confidentialité.');return;}
+  if(m.length<10){alert('Message trop court.');return;}
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true;btn.textContent='⏳ Envoi en cours...';
+  setTimeout(()=>{
+    btn.style.display='none';
+    document.getElementById('successMsg').style.display='block';
+  },1500);
+}
+</script>
+</body>
+</html>

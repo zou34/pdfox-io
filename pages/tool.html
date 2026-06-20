@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title id="pgTitle">Outil PDF — PDFOX.io</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body style="background:var(--off)">
+<nav id="navbar">
+  <a class="nav-logo" href="../index.html"><div class="logo-icon">🦊</div><span class="logo-text">PDF<span class="logo-accent">OX</span>.io</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../index.html#tools">⬅ Tous les outils</a></li>
+    <li><a href="../index.html#ai" class="ai-link">✨ IA</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="../index.html#tools" class="nav-cta">Essayer →</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="p-hero">
+  <h1 id="toolTitle">Chargement...</h1>
+  <p id="toolSub">Traitement gratuit, rapide et sécurisé dans votre navigateur</p>
+</div>
+
+<div class="upload-wrap">
+  <div class="upload-zone" id="uploadZone">
+    <span class="u-ico" id="toolIco">📄</span>
+    <h3 id="zoneTitle">Déposez votre fichier ici</h3>
+    <p id="zoneDesc">ou cliquez pour sélectionner</p>
+    <input type="file" class="u-input" id="fileInput"/>
+    <button class="u-btn" onclick="document.getElementById('fileInput').click()">📂 Sélectionner un fichier</button>
+    <div class="u-info" id="fileInfo"></div>
+    <div class="u-options" id="toolOpts"></div>
+    <div class="prog-bar" id="progBar"><div class="prog-fill" id="progFill"></div></div>
+    <button class="proc-btn" id="procBtn" onclick="processFile()">⚡ Lancer la conversion</button>
+    <a class="dl-btn" id="dlBtn" href="#" download>✅ Télécharger le fichier</a>
+    <div class="trust-bdg">
+      <span>🔒 SSL Sécurisé</span><span>🚫 Sans inscription</span>
+      <span>🗑️ Supprimé en 1h</span><span>📱 Mobile OK</span>
+    </div>
+  </div>
+
+  <div style="max-width:620px;margin:24px auto">
+    <div class="ad-slot ad-300" style="margin:0 auto"><!-- AdSense tool-page --><span>📢 Google AdSense</span></div>
+  </div>
+
+  <div style="max-width:620px;margin:0 auto 32px">
+    <h3 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:900;margin-bottom:16px">Autres outils populaires</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px" id="otherGrid"></div>
+  </div>
+
+  <div class="faq-wrap">
+    <h2>Questions fréquentes</h2>
+    <div id="faqList"></div>
+  </div>
+</div>
+
+<footer style="background:var(--navy);padding:28px 24px">
+  <div style="max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid rgba(255,255,255,.07);padding-top:24px">
+    <a href="../index.html" class="nav-logo"><div class="logo-icon">🦊</div><span class="logo-text">PDF<span class="logo-accent">OX</span>.io</span></a>
+    <div style="display:flex;gap:20px;font-size:13px">
+      <a href="privacy.html" style="color:rgba(255,255,255,.4)">Confidentialité</a>
+      <a href="terms.html" style="color:rgba(255,255,255,.4)">CGU</a>
+      <a href="contact.html" style="color:rgba(255,255,255,.4)">Contact</a>
+    </div>
+    <span style="color:rgba(255,255,255,.3);font-size:13px">© 2026 PDFOX.io</span>
+  </div>
+</footer>
+
+<script src="../js/main.js"></script>
+<script src="../js/tools.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+const CFG={
+  'pdf-to-word':{title:'PDF vers Word',ico:'📄',sub:'Convertissez votre PDF en document Word éditable (.docx)',accept:'.pdf',ext:'.docx',faq:[
+    {q:'La mise en page sera-t-elle conservée ?',a:'Pour la majorité des PDF textuels oui. Les PDF très complexes peuvent avoir des variations mineures.'},
+    {q:'Mon PDF scanné peut-il être converti ?',a:'Les PDF scannés nécessitent d\'abord l\'outil OCR PDF, puis la conversion Word.'},
+    {q:'Est-ce vraiment gratuit ?',a:'Oui, entièrement gratuit sans limite de conversions par jour.'},
+  ]},
+  'word-to-pdf':{title:'Word vers PDF',ico:'📝',sub:'Transformez vos fichiers Word (.docx) en PDF professionnel',accept:'.doc,.docx',ext:'.pdf',faq:[
+    {q:'Les formats .doc et .docx sont-ils acceptés ?',a:'Oui, nous acceptons les deux formats Word.'},
+  ]},
+  'compress':{title:'Compresser PDF',ico:'🗜️',sub:'Réduisez la taille de votre PDF jusqu\'à 90% sans perte visible',accept:'.pdf',ext:'-compressé.pdf',
+    opts:`<label>Niveau de compression :</label>
+    <div class="radio-row">
+      <label><input type="radio" name="clvl" value="light"> Léger (−30%)</label>
+      <label><input type="radio" name="clvl" value="medium" checked> Équilibré (−60%)</label>
+      <label><input type="radio" name="clvl" value="strong"> Fort (−85%)</label>
+    </div>`,
+    faq:[{q:'Quelle réduction puis-je espérer ?',a:'En mode équilibré, la taille est réduite de 50 à 80%.'}]},
+  'merge':{title:'Fusionner PDF',ico:'🔗',sub:'Combinez plusieurs fichiers PDF en un seul document',accept:'.pdf',ext:'-fusionné.pdf',multiple:true,faq:[
+    {q:'Combien de fichiers puis-je fusionner ?',a:'Jusqu\'à 20 fichiers PDF en une seule opération, gratuitement.'},
+  ]},
+  'split':{title:'Diviser PDF',ico:'✂️',sub:'Extrayez des pages spécifiques ou divisez votre PDF',accept:'.pdf',ext:'-divisé.pdf',
+    opts:`<label>Pages à extraire (ex: 1-3, 5, 8-10) :</label>
+    <input type="text" id="pRange" placeholder="Laisser vide = diviser toutes les pages"/>`,
+    faq:[{q:'Comment indiquer les pages ?',a:'Entrez les numéros séparés par des virgules (1,3,5) ou des plages (1-5, 8-12).'}]},
+  'pdf-to-jpg':{title:'PDF vers JPG',ico:'🖼️',sub:'Convertissez chaque page de votre PDF en image JPG haute qualité',accept:'.pdf',ext:'.jpg',faq:[
+    {q:'Si mon PDF a 10 pages, j\'aurai 10 images ?',a:'Oui, chaque page génère une image JPG distincte.'},
+  ]},
+  'jpg-to-pdf':{title:'JPG vers PDF',ico:'📸',sub:'Transformez vos photos et images en un PDF partageable',accept:'.jpg,.jpeg,.png,.gif,.bmp,.webp',ext:'.pdf',multiple:true,faq:[
+    {q:'Quels formats d\'image sont acceptés ?',a:'JPG, JPEG, PNG, GIF, BMP et WebP sont tous acceptés.'},
+  ]},
+  'pdf-to-pptx':{title:'PDF vers PowerPoint',ico:'📊',sub:'Convertissez vos présentations PDF en slides modifiables .pptx',accept:'.pdf',ext:'.pptx',faq:[
+    {q:'Les animations seront-elles préservées ?',a:'Non, seule la mise en page et les images de chaque slide sont préservées.'},
+  ]},
+  'pdf-to-excel':{title:'PDF vers Excel',ico:'📈',sub:'Extrayez tableaux et données de vos PDF vers Excel',accept:'.pdf',ext:'.xlsx',faq:[
+    {q:'Les formules Excel sont-elles préservées ?',a:'Non, seules les valeurs numériques et le texte sont extraits.'},
+  ]},
+  'sign':{title:'Signer PDF',ico:'✍️',sub:'Ajoutez votre signature électronique légale sans imprimer',accept:'.pdf',ext:'-signé.pdf',faq:[
+    {q:'La signature est-elle légalement valide ?',a:'Oui, dans l\'UE (règlement eIDAS) et dans la plupart des pays d\'Afrique francophone.'},
+  ]},
+  'protect':{title:'Protéger PDF',ico:'🔒',sub:'Ajoutez un mot de passe à votre PDF en un clic',accept:'.pdf',ext:'-protégé.pdf',
+    opts:`<label>Mot de passe :</label>
+    <input type="password" id="pdfPwd" placeholder="Entrez un mot de passe fort..."/>
+    <p style="font-size:12px;color:var(--gray);margin-top:6px">⚠️ Notez votre mot de passe — il ne peut pas être récupéré.</p>`,
+    faq:[{q:'Mon mot de passe est-il stocké ?',a:'Non. Le chiffrement se fait dans votre navigateur. Votre mot de passe ne nous est jamais transmis.'}]},
+  'unlock':{title:'Déverrouiller PDF',ico:'🔓',sub:'Supprimez les restrictions d\'un PDF que vous possédez',accept:'.pdf',ext:'-déverrouillé.pdf',faq:[
+    {q:'Est-ce légal ?',a:'Oui, si vous êtes le propriétaire légitime du document.'},
+  ]},
+  'ocr':{title:'OCR PDF',ico:'🔍',sub:'Rendez vos scans cherchables et éditables grâce à l\'OCR',accept:'.pdf',ext:'-ocr.pdf',
+    opts:`<label>Langue du document :</label>
+    <select id="ocrLang"><option value="fra">Français</option><option value="eng">English</option><option value="por">Português</option><option value="spa">Español</option><option value="ara">العربية</option></select>`,
+    faq:[{q:'Quelle qualité de scan est nécessaire ?',a:'Une résolution minimum de 300 DPI est recommandée pour de bons résultats.'}]},
+  'rotate':{title:'Pivoter PDF',ico:'🔄',sub:'Corrigez l\'orientation de vos pages PDF en un seul clic',accept:'.pdf',ext:'-pivoté.pdf',
+    opts:`<label>Rotation :</label>
+    <div class="radio-row">
+      <label><input type="radio" name="rot" value="90" checked> 90° →</label>
+      <label><input type="radio" name="rot" value="180"> 180°</label>
+      <label><input type="radio" name="rot" value="270"> 270° ←</label>
+    </div>`,
+    faq:[{q:'Puis-je pivoter certaines pages seulement ?',a:'Par défaut toutes les pages sont pivotées. La sélection de pages individuelles arrive bientôt.'}]},
+  'watermark':{title:'Filigrane PDF',ico:'💧',sub:'Ajoutez un watermark texte sur toutes vos pages PDF',accept:'.pdf',ext:'-filigrane.pdf',
+    opts:`<label>Texte du filigrane :</label>
+    <input type="text" id="wmText" value="CONFIDENTIEL"/>
+    <label style="margin-top:12px">Opacité : <span id="wmVal">30</span>%</label>
+    <input type="range" id="wmOpa" min="10" max="80" value="30" oninput="document.getElementById('wmVal').textContent=this.value" style="width:100%;margin-top:6px"/>`,
+    faq:[{q:'Puis-je choisir la couleur ?',a:'Actuellement le filigrane est en gris. Les options de couleur arrivent dans la prochaine version.'}]},
+  'html-to-pdf':{title:'HTML vers PDF',ico:'🌐',sub:'Convertissez n\'importe quelle page web en PDF téléchargeable',accept:'.html,.htm',ext:'.pdf',faq:[
+    {q:'Puis-je convertir une URL directement ?',a:'Vous pouvez uploader un fichier .html. La conversion d\'URL directe arrive bientôt.'},
+  ]},
+};
+
+const p=new URLSearchParams(window.location.search),slug=p.get('tool')||'pdf-to-word',T=CFG[slug]||CFG['pdf-to-word'];
+document.getElementById('pgTitle').textContent=T.title+' — PDFOX.io';
+document.getElementById('toolTitle').textContent=T.ico+' '+T.title;
+document.getElementById('toolSub').textContent=T.sub;
+document.getElementById('toolIco').textContent=T.ico;
+document.getElementById('zoneTitle').textContent='Déposez votre fichier '+(T.accept.includes('pdf')?'PDF':'')+ ' ici';
+document.getElementById('zoneDesc').textContent='Formats acceptés : '+T.accept+(T.multiple?' — Sélection multiple possible':'');
+
+const fi=document.getElementById('fileInput');
+fi.accept=T.accept;if(T.multiple)fi.multiple=true;
+
+if(T.opts)document.getElementById('toolOpts').innerHTML=T.opts;
+
+document.getElementById('faqList').innerHTML=(T.faq||[]).map(item=>`
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">${item.q}<span class="faq-arr">▼</span></button>
+    <div class="faq-a"><div class="faq-a-in">${item.a}</div></div>
+  </div>`).join('');
+
+document.getElementById('otherGrid').innerHTML=
+  TOOLS.filter(t=>t.slug!==slug).slice(0,6).map(t=>`
+    <a href="tool.html?tool=${t.slug}" style="background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:14px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:var(--navy);transition:all .2s" onmouseover="this.style.borderColor='var(--blue)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
+      <span style="font-size:20px">${t.icon}</span>${t.name}
+    </a>`).join('');
+
+let files=[];
+const zone=document.getElementById('uploadZone');
+zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('dragover');});
+zone.addEventListener('dragleave',e=>{if(!zone.contains(e.relatedTarget))zone.classList.remove('dragover');});
+zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('dragover');handle(e.dataTransfer.files);});
+fi.addEventListener('change',()=>handle(fi.files));
+
+function handle(f){
+  files=Array.from(f);
+  const info=document.getElementById('fileInfo');
+  info.style.display='block';
+  info.innerHTML='📎 <strong>'+files.map(x=>x.name).join(', ')+'</strong> — '+formatSize(files.reduce((a,x)=>a+x.size,0));
+  document.getElementById('procBtn').style.display='block';
+  document.getElementById('dlBtn').style.display='none';
+}
+
+async function processFile(){
+  if(!files.length){alert('Veuillez sélectionner un fichier.');return;}
+  const btn=document.getElementById('procBtn'),dl=document.getElementById('dlBtn');
+  btn.disabled=true;btn.textContent='⏳ Traitement en cours...';
+  startProgress('progBar','progFill',2200);
+  try{
+    let blob=null,f=files[0],out=f.name.replace(/\.[^.]+$/,'')+T.ext;
+    if(slug==='compress')blob=await compressPDF(f);
+    else if(slug==='merge')blob=await mergePDFs(files);
+    else if(slug==='rotate')blob=await rotatePDF(f);
+    else if(slug==='watermark')blob=await watermarkPDF(f);
+    else if(slug==='unlock')blob=await unlockPDF(f);
+    else if(slug==='jpg-to-pdf')blob=await imagesToPDF(files);
+    else if(slug==='pdf-to-jpg')blob=await pdfToJpg(f);
+    else{blob=f;} // fallback
+    finishProgress('progBar','progFill',()=>{
+      const url=URL.createObjectURL(blob);
+      dl.href=url;dl.download=out;dl.style.display='block';
+      dl.textContent='✅ Télécharger '+out;btn.style.display='none';
+    });
+  }catch(err){
+    console.error(err);
+    finishProgress('progBar','progFill');
+    alert('Erreur : Vérifiez que votre fichier est valide et non protégé.');
+    btn.disabled=false;btn.textContent='⚡ Lancer la conversion';
+  }
+}
+
+async function compressPDF(f){
+  const ab=await f.arrayBuffer(),doc=await PDFLib.PDFDocument.load(ab,{ignoreEncryption:true});
+  return new Blob([await doc.save({useObjectStreams:true})],{type:'application/pdf'});
+}
+async function mergePDFs(fs){
+  const m=await PDFLib.PDFDocument.create();
+  for(const f of fs){const ab=await f.arrayBuffer(),d=await PDFLib.PDFDocument.load(ab,{ignoreEncryption:true}),ps=await m.copyPages(d,d.getPageIndices());ps.forEach(p=>m.addPage(p));}
+  return new Blob([await m.save()],{type:'application/pdf'});
+}
+async function rotatePDF(f){
+  const ang=parseInt(document.querySelector('input[name="rot"]:checked')?.value||'90');
+  const ab=await f.arrayBuffer(),doc=await PDFLib.PDFDocument.load(ab,{ignoreEncryption:true});
+  doc.getPages().forEach(p=>{const c=p.getRotation().angle;p.setRotation(PDFLib.degrees((c+ang)%360));});
+  return new Blob([await doc.save()],{type:'application/pdf'});
+}
+async function watermarkPDF(f){
+  const txt=document.getElementById('wmText')?.value||'CONFIDENTIEL';
+  const opa=parseFloat(document.getElementById('wmOpa')?.value||30)/100;
+  const ab=await f.arrayBuffer(),doc=await PDFLib.PDFDocument.load(ab,{ignoreEncryption:true});
+  const font=await doc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+  doc.getPages().forEach(pg=>{
+    const{width,height}=pg.getSize();
+    pg.drawText(txt,{x:width/2-(txt.length*18)/2,y:height/2,size:48,font,color:PDFLib.rgb(.5,.5,.5),opacity:opa,rotate:PDFLib.degrees(45)});
+  });
+  return new Blob([await doc.save()],{type:'application/pdf'});
+}
+async function unlockPDF(f){
+  const ab=await f.arrayBuffer(),doc=await PDFLib.PDFDocument.load(ab,{ignoreEncryption:true});
+  const n=await PDFLib.PDFDocument.create(),ps=await n.copyPages(doc,doc.getPageIndices());
+  ps.forEach(p=>n.addPage(p));
+  return new Blob([await n.save()],{type:'application/pdf'});
+}
+async function imagesToPDF(fs){
+  const{jsPDF}=window.jspdf,pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  let first=true;
+  for(const f of fs){
+    const d=await fileToDataURL(f),img=await loadImage(d);
+    const W=210,H=297,r=Math.min(W/img.width,H/img.height);
+    const w=img.width*r,h=img.height*r;
+    if(!first)pdf.addPage();
+    pdf.addImage(d,'JPEG',(W-w)/2,(H-h)/2,w,h);first=false;
+  }
+  return pdf.output('blob');
+}
+async function pdfToJpg(f){
+  const ab=await f.arrayBuffer(),pdf=await pdfjsLib.getDocument(ab).promise;
+  const pg=await pdf.getPage(1),vp=pg.getViewport({scale:2});
+  const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;
+  await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
+  return new Promise(res=>c.toBlob(res,'image/jpeg',.92));
+}
+</script>
+</body>
+</html>

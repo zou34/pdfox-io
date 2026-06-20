@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Extracteur IA — Métadonnées PDF — PDFOX.io</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body class="ai-page-bg">
+<nav id="navbar">
+  <a class="nav-logo" href="../index.html"><div class="logo-icon">🦊</div><span class="logo-text">PDF<span class="logo-accent">OX</span>.io</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../index.html#tools">Outils PDF</a></li>
+    <li><a href="../index.html#ai" class="ai-link">✨ IA</a></li>
+    <li><a href="../index.html#tools" class="nav-cta">Tous les outils →</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="p-hero" style="background:linear-gradient(160deg,var(--navy) 0%,#0a1a4a 100%)">
+  <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.3);border-radius:100px;padding:7px 16px;margin-bottom:18px;font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px">✨ Propulsé par Claude AI</div>
+  <h1>🔎 Extracteur IA</h1>
+  <p>Détectez automatiquement type, langue, données sensibles<br>et informations clés de n'importe quel document PDF.</p>
+</div>
+
+<div class="ai-page-main">
+  <div class="ai-page-wrap">
+    <div class="ai-main-card fade-up">
+      <div class="ai-upload-zone" id="uploadZone">
+        <span class="ico">📄</span>
+        <h3>Déposez votre PDF ici</h3>
+        <p>ou cliquez pour sélectionner — Max 15 Mo</p>
+        <input type="file" accept=".pdf" id="fileInput" style="display:none"/>
+      </div>
+      <div class="ai-file-info" id="fileInfo"></div>
+      <button class="ai-act-btn" id="actBtn" onclick="extract()">🔎 Extraire les métadonnées</button>
+      <div class="ai-loader" id="loader"><div class="ai-dots"><span></span><span></span><span></span></div><p>L'IA analyse votre document...</p></div>
+
+      <div class="ai-result" id="resultBox">
+        <h3>📊 Métadonnées extraites</h3>
+        <div id="metaGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px"></div>
+        <div id="sensitiveSec" style="margin-top:12px"></div>
+        <button class="rst-btn" onclick="resetForm()" style="margin-top:18px">🔄 Analyser un autre document</button>
+      </div>
+      <div class="usage-txt" id="usageTxt"></div>
+    </div>
+
+    <div style="margin:28px 0">
+      <div class="ad-slot" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.03);color:rgba(255,255,255,.3);min-height:90px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:13px">
+        <!-- AdSense · ai-metadata --><span>📢 Espace Publicitaire — Google AdSense</span>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Syne',sans-serif;color:#fff;font-size:18px;margin-bottom:16px">Autres outils IA</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:48px">
+      <a href="ai-summarizer.html" class="ai-card" style="padding:22px"><span style="font-size:30px;display:block;margin-bottom:10px">🧠</span><h3 style="font-size:15px">Résumeur IA</h3></a>
+      <a href="ai-chat.html" class="ai-card" style="padding:22px"><span style="font-size:30px;display:block;margin-bottom:10px">💬</span><h3 style="font-size:15px">Chat PDF IA</h3></a>
+      <a href="ai-rewrite.html" class="ai-card" style="padding:22px"><span style="font-size:30px;display:block;margin-bottom:10px">✏️</span><h3 style="font-size:15px">Réécriture IA</h3></a>
+    </div>
+  </div>
+</div>
+
+<footer style="background:var(--navy);padding:28px 24px">
+  <div style="max-width:760px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid rgba(255,255,255,.07);padding-top:24px">
+    <a href="../index.html" class="nav-logo"><div class="logo-icon">🦊</div><span class="logo-text">PDF<span class="logo-accent">OX</span>.io</span></a>
+    <span style="color:rgba(255,255,255,.3);font-size:13px">© 2026 PDFOX.io</span>
+  </div>
+</footer>
+
+<script src="../js/main.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let pdfText='',fileName='';
+function showUsage(){const r=aiRemaining();document.getElementById('usageTxt').textContent=r+' analyse'+(r>1?'s':'')+' gratuite'+(r>1?'s':'')+' restante'+(r>1?'s':'')+' aujourd\'hui';}
+showUsage();
+initDragDrop('uploadZone','fileInput',handleFile);
+async function handleFile(files){
+  const file=files[0];if(!file?.name.endsWith('.pdf')){alert('Fichier PDF requis.');return;}
+  fileName=file.name;
+  const info=document.getElementById('fileInfo');
+  info.style.display='block';info.textContent='⏳ Chargement de '+file.name+'...';
+  try{
+    const ab=await file.arrayBuffer(),pdf=await pdfjsLib.getDocument(ab).promise;
+    let text='';
+    for(let i=1;i<=Math.min(pdf.numPages,20);i++){const pg=await pdf.getPage(i),ct=await pg.getTextContent();text+=ct.items.map(it=>it.str).join(' ')+'\n';}
+    pdfText=text.trim().substring(0,15000);
+    info.textContent='✅ '+file.name+' — '+pdf.numPages+' pages';
+    document.getElementById('actBtn').style.display='block';
+  }catch{info.textContent='❌ Erreur. PDF protégé ?';}
+}
+async function extract(){
+  if(!pdfText){alert('Sélectionnez d\'abord un PDF.');return;}
+  if(aiRemaining()<=0){alert('Limite atteinte. Revenez demain !');return;}
+  const btn=document.getElementById('actBtn');btn.disabled=true;
+  document.getElementById('loader').style.display='block';
+  document.getElementById('resultBox').style.display='none';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:800,
+        system:`Analyse ce document et réponds UNIQUEMENT en JSON valide sans markdown.
+Format: {"type":"type de document","langue":"langue principale","sujet":"sujet principal en 1 phrase","auteur":"auteur si détectable, sinon Inconnu","date":"date si détectable, sinon Inconnue","mots_cles":["mot1","mot2","mot3"],"donnees_sensibles":["liste des types de données sensibles trouvées ou [] si aucune"],"registre":"formel/technique/académique/informel","longueur_estimee":"court/moyen/long"}`,
+        messages:[{role:'user',content:'Document :\n\n'+pdfText}]
+      })
+    });
+    const data=await res.json();
+    const raw=data.content?.find(b=>b.type==='text')?.text||'{}';
+    let r;try{r=JSON.parse(raw.replace(/```json|```/g,'').trim());}catch{r={};}
+    incAiUsage();showUsage();
+    const grid=document.getElementById('metaGrid');
+    const items=[
+      {ico:'📂',label:'Type',val:r.type||'—'},
+      {ico:'🌐',label:'Langue',val:r.langue||'—'},
+      {ico:'✍️',label:'Auteur',val:r.auteur||'—'},
+      {ico:'📅',label:'Date',val:r.date||'—'},
+      {ico:'🎭',label:'Registre',val:r.registre||'—'},
+      {ico:'📏',label:'Longueur',val:r.longueur_estimee||'—'},
+    ];
+    grid.innerHTML=items.map(it=>`<div class="r-item"><strong>${it.ico} ${it.label} :</strong><br><span style="color:rgba(255,255,255,.8)">${it.val}</span></div>`).join('');
+    if(r.sujet)grid.innerHTML+=`<div class="r-item" style="grid-column:1/-1"><strong>🎯 Sujet :</strong><br><span style="color:rgba(255,255,255,.8)">${r.sujet}</span></div>`;
+    if(r.mots_cles?.length)grid.innerHTML+=`<div class="r-item" style="grid-column:1/-1"><strong>🏷️ Mots-clés :</strong> ${r.mots_cles.map(m=>`<span style="background:rgba(0,87,255,.2);padding:2px 8px;border-radius:6px;margin:2px;display:inline-block">${m}</span>`).join('')}</div>`;
+    const ss=document.getElementById('sensitiveSec');
+    if(r.donnees_sensibles?.length){
+      ss.innerHTML=`<div class="r-item" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3)"><strong>⚠️ Données sensibles détectées :</strong><br>${r.donnees_sensibles.map(d=>`<span style="color:#ff6b6b">• ${d}</span>`).join('<br>')}</div>`;
+    }else{
+      ss.innerHTML=`<div class="r-item" style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3)"><strong>✅ Aucune donnée sensible</strong> détectée dans ce document.</div>`;
+    }
+    document.getElementById('resultBox').style.display='block';
+  }catch{alert('Erreur. Réessayez.');btn.disabled=false;}
+  document.getElementById('loader').style.display='none';
+}
+function resetForm(){
+  pdfText='';fileName='';
+  document.getElementById('fileInfo').style.display='none';
+  document.getElementById('actBtn').style.display='none';
+  document.getElementById('actBtn').disabled=false;
+  document.getElementById('resultBox').style.display='none';
+  document.getElementById('fileInput').value='';
+  showUsage();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PDFOX.io — Convertir, Compresser et Modifier vos PDF Gratuitement</title>
+  <meta name="description" content="PDFOX.io : Convertissez PDF en Word, compressez, fusionnez, signez vos documents en ligne. Gratuit, rapide, sans inscription. Propulsé par l'IA Claude."/>
+  <meta name="keywords" content="convertir PDF, compresser PDF, fusionner PDF, PDF en Word, Word en PDF, outils PDF gratuits, PDF en ligne"/>
+  <meta property="og:title" content="PDFOX.io — Outils PDF Gratuits & IA"/>
+  <meta property="og:description" content="La référence mondiale des outils PDF. Conversion, compression, fusion, signature et IA."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://pdfox.io"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav id="navbar">
+  <a class="nav-logo" href="index.html">
+    <div class="logo-icon">🦊</div>
+    <span class="logo-text">PDF<span class="logo-accent">OX</span>.io</span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#tools">Outils PDF</a></li>
+    <li><a href="#ai" class="ai-link">✨ IA</a></li>
+    <li><a href="pages/blog.html">Blog</a></li>
+    <li><a href="pages/about.html">À propos</a></li>
+    <li><a href="pages/contact.html">Contact</a></li>
+    <li><a href="#tools" class="nav-cta">Essayer gratuitement →</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="home">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-particles">
+    <span class="particle" style="top:15%;left:7%;animation-delay:0s">📄</span>
+    <span class="particle" style="top:65%;left:5%;animation-delay:1.2s">🔗</span>
+    <span class="particle" style="top:25%;right:7%;animation-delay:2s">✂️</span>
+    <span class="particle" style="top:70%;right:9%;animation-delay:.6s">🔒</span>
+  </div>
+  <div class="container hero-content">
+    <div class="hero-badge fade-up">
+      <span class="pulse-dot"></span>
+      16 outils PDF · Propulsé par l'IA Claude · 100% Gratuit
+    </div>
+    <h1 class="fade-up delay-1">
+      La suite PDF la plus<br>
+      <span class="gradient-blue">rapide</span> et <span class="gradient-orange">intelligente</span><br>
+      du web
+    </h1>
+    <p class="hero-sub fade-up delay-2">
+      Convertissez, compressez, fusionnez, signez et analysez vos documents en quelques secondes.
+      Sans inscription. Sans logiciel. Directement dans votre navigateur.
+    </p>
+    <div class="search-bar fade-up delay-3">
+      <span class="search-ico">🔍</span>
+      <input type="text" id="searchInput" placeholder="Rechercher un outil… ex: compresser PDF, PDF en Word"/>
+      <button onclick="searchTool()">Chercher</button>
+    </div>
+    <div class="hero-stats fade-up delay-4">
+      <div class="stat"><span class="stat-num">2M+</span><span class="stat-lbl">fichiers traités</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span class="stat-num">16</span><span class="stat-lbl">outils gratuits</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span class="stat-num">4.9★</span><span class="stat-lbl">note utilisateurs</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span class="stat-num">100%</span><span class="stat-lbl">dans le navigateur</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ADSENSE 1 ═══ -->
+<div class="ad-bar">
+  <div class="container">
+    <div class="ad-slot ad-728">
+      <!-- Google AdSense · hero-leaderboard-728x90 -->
+      <span>📢 Espace Publicitaire — Google AdSense (728×90)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ OUTILS ═══ -->
+<section id="tools" class="tools-sec">
+  <div class="container">
+    <div class="sec-header fade-up">
+      <span class="sec-tag">🛠️ Outils PDF</span>
+      <h2>Tout ce dont vous avez besoin,<br>en un seul endroit</h2>
+      <p class="sec-sub">16 outils professionnels, gratuits, sans compte. Vos fichiers restent sur votre appareil.</p>
+    </div>
+    <div class="tool-filters fade-up">
+      <button class="f-btn active" onclick="filterTools('all',this)">Tous les outils</button>
+      <button class="f-btn" onclick="filterTools('conversion',this)">Conversion</button>
+      <button class="f-btn" onclick="filterTools('edition',this)">Édition</button>
+      <button class="f-btn" onclick="filterTools('securite',this)">Sécurité</button>
+      <button class="f-btn" onclick="filterTools('image',this)">Image</button>
+    </div>
+    <div class="tools-grid" id="toolsGrid"></div>
+  </div>
+</section>
+
+<!-- ═══ IA ═══ -->
+<section id="ai" class="ai-sec">
+  <div class="ai-bg-glow"></div>
+  <div class="container ai-inner">
+    <div class="sec-header fade-up">
+      <span class="sec-tag ai-sec-tag">✨ Intelligence Artificielle</span>
+      <h2 style="color:#fff">L'IA au service<br>de vos documents</h2>
+      <p class="sec-sub" style="color:rgba(255,255,255,.5)">Analysez, résumez et interrogez vos PDF grâce à Claude d'Anthropic — l'IA la plus précise au monde.</p>
+    </div>
+    <div class="ai-grid">
+      <a class="ai-card fade-up delay-1" href="pages/ai-summarizer.html">
+        <div class="ai-badge-tag">✨ IA Claude</div>
+        <span class="ai-ico">🧠</span>
+        <h3>Résumeur IA</h3>
+        <p>Résumé en 5 points clés avec analyse du ton, de la langue et des thèmes principaux.</p>
+        <span class="ai-cta">Essayer →</span>
+      </a>
+      <a class="ai-card fade-up delay-2" href="pages/ai-chat.html">
+        <div class="ai-badge-tag">✨ IA Claude</div>
+        <span class="ai-ico">💬</span>
+        <h3>Chat avec PDF</h3>
+        <p>Posez des questions sur votre document. L'IA répond avec les références de page exactes.</p>
+        <span class="ai-cta">Essayer →</span>
+      </a>
+      <a class="ai-card fade-up delay-3" href="pages/ai-rewrite.html">
+        <div class="ai-badge-tag">✨ IA Claude</div>
+        <span class="ai-ico">✏️</span>
+        <h3>Réécriture IA</h3>
+        <p>Simplifiez, formalisez, traduisez ou condensez du texte extrait de PDF en secondes.</p>
+        <span class="ai-cta">Essayer →</span>
+      </a>
+      <a class="ai-card fade-up delay-4" href="pages/ai-metadata.html">
+        <div class="ai-badge-tag">✨ IA Claude</div>
+        <span class="ai-ico">🔎</span>
+        <h3>Extracteur IA</h3>
+        <p>Détectez type, langue, données sensibles et informations clés de vos documents.</p>
+        <span class="ai-cta">Essayer →</span>
+      </a>
+    </div>
+    <p class="powered-by">Propulsé par <strong>Claude AI · Anthropic</strong> — Technologie IA de référence mondiale</p>
+  </div>
+</section>
+
+<!-- ═══ COMMENT ÇA MARCHE ═══ -->
+<section class="how-sec">
+  <div class="container">
+    <div class="sec-header fade-up" style="text-align:center">
+      <span class="sec-tag">⚡ Simplicité</span>
+      <h2>Prêt en 3 étapes</h2>
+      <p class="sec-sub" style="margin:0 auto">Aucune inscription. Aucune installation. Juste votre fichier et votre résultat.</p>
+    </div>
+    <div class="steps-row">
+      <div class="step fade-up delay-1">
+        <div class="step-num" style="background:linear-gradient(135deg,#0057FF,#3B82FF);box-shadow:0 10px 28px rgba(0,87,255,.35)">1</div>
+        <h3>Déposez votre fichier</h3>
+        <p>Glissez-déposez ou cliquez pour sélectionner. PDF, Word, Excel, images — tout est accepté.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step fade-up delay-2">
+        <div class="step-num" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);box-shadow:0 10px 28px rgba(99,102,241,.35)">2</div>
+        <h3>Choisissez l'opération</h3>
+        <p>Sélectionnez parmi nos 16 fonctionnalités. La conversion démarre automatiquement.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step fade-up delay-3">
+        <div class="step-num" style="background:linear-gradient(135deg,#FF6B35,#FFD700);box-shadow:0 10px 28px rgba(255,107,53,.35)">3</div>
+        <h3>Téléchargez le résultat</h3>
+        <p>Votre fichier est prêt en secondes. Supprimé de nos serveurs automatiquement en 1 heure.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ POURQUOI PDFOX ═══ -->
+<section class="why-sec">
+  <div class="container">
+    <div class="sec-header fade-up">
+      <span class="sec-tag">💎 Pourquoi PDFOX ?</span>
+      <h2>Conçu pour les<br>professionnels exigeants</h2>
+      <p class="sec-sub">Performance, sécurité et simplicité — sans compromis.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card fade-up delay-1">
+        <div class="feat-ico" style="background:rgba(0,87,255,.09)">⚡</div>
+        <h3>Ultra-rapide</h3>
+        <p>Traitement en secondes grâce à notre infrastructure optimisée et au traitement côté navigateur.</p>
+      </div>
+      <div class="feat-card fade-up delay-2">
+        <div class="feat-ico" style="background:rgba(16,185,129,.1)">🔐</div>
+        <h3>Confidentialité totale</h3>
+        <p>Fichiers traités dans votre navigateur ou supprimés sous 1h. Aucune donnée vendue. Jamais.</p>
+      </div>
+      <div class="feat-card fade-up delay-3">
+        <div class="feat-ico" style="background:rgba(255,107,53,.1)">🌍</div>
+        <h3>Partout dans le monde</h3>
+        <p>Windows, Mac, iPhone, Android. Compatible avec les connexions lentes. Accessible depuis toute l'Afrique.</p>
+      </div>
+      <div class="feat-card fade-up delay-4">
+        <div class="feat-ico" style="background:rgba(139,92,246,.1)">💎</div>
+        <h3>Qualité professionnelle</h3>
+        <p>Polices, tableaux, images et mise en page préservés avec une fidélité maximale.</p>
+      </div>
+      <div class="feat-card fade-up delay-1">
+        <div class="feat-ico" style="background:rgba(20,184,166,.1)">🤖</div>
+        <h3>IA de pointe intégrée</h3>
+        <p>Propulsé par Claude d'Anthropic, notre IA analyse vos documents avec une précision inégalée.</p>
+      </div>
+      <div class="feat-card fade-up delay-2">
+        <div class="feat-ico" style="background:rgba(245,158,11,.1)">🆓</div>
+        <h3>Vraiment gratuit</h3>
+        <p>Aucune carte bancaire. Aucun abonnement caché. Les 16 outils essentiels sont et resteront gratuits.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ADSENSE 2 ═══ -->
+<div class="ad-bar" style="background:#fff">
+  <div class="container">
+    <div class="ad-slot ad-336" style="margin:0 auto">
+      <!-- Google AdSense · middle-rectangle-336x280 -->
+      <span>📢 Espace Publicitaire — Google AdSense (336×280)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TÉMOIGNAGES ═══ -->
+<section class="testi-sec">
+  <div class="container">
+    <div class="sec-header fade-up" style="text-align:center">
+      <span class="sec-tag">⭐ Témoignages</span>
+      <h2>Ce que disent nos utilisateurs</h2>
+      <p class="sec-sub" style="margin:0 auto">Des milliers de professionnels font confiance à PDFOX chaque jour.</p>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card fade-up delay-1">
+        <div class="testi-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="testi-txt">PDFOX a révolutionné ma façon de travailler. La conversion PDF vers Word est parfaite, ma mise en page est toujours préservée. Je l'utilise au bureau tous les jours.</p>
+        <div class="testi-author">
+          <div class="testi-av" style="background:linear-gradient(135deg,#0057FF,#00C6FF)">A</div>
+          <div><div class="testi-name">Amina Traoré</div><div class="testi-role">Juriste · Abidjan, Côte d'Ivoire</div></div>
+        </div>
+      </div>
+      <div class="testi-card fade-up delay-2">
+        <div class="testi-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="testi-txt">La fonctionnalité de résumé IA est bluffante. Je charge un rapport de 80 pages et j'obtiens un résumé structuré en 20 secondes. Gain de temps incroyable pour mon équipe.</p>
+        <div class="testi-author">
+          <div class="testi-av" style="background:linear-gradient(135deg,#FF6B35,#FFD700)">M</div>
+          <div><div class="testi-name">Marc Dubois</div><div class="testi-role">Directeur Financier · Paris, France</div></div>
+        </div>
+      </div>
+      <div class="testi-card fade-up delay-3">
+        <div class="testi-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="testi-txt">Enfin un outil PDF parfait sur mobile ! Je signe et compresse mes PDF directement depuis mon téléphone. Simple, rapide, gratuit. Exactement ce qu'il me fallait.</p>
+        <div class="testi-author">
+          <div class="testi-av" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">S</div>
+          <div><div class="testi-name">Serigne Fall</div><div class="testi-role">Entrepreneur · Dakar, Sénégal</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TRUST BAR ═══ -->
+<div class="trust-bar">
+  <span class="trust-item">🔒 SSL Sécurisé</span>
+  <span class="trust-sep">|</span>
+  <span class="trust-item">🚫 Sans inscription</span>
+  <span class="trust-sep">|</span>
+  <span class="trust-item">🗑️ Supprimé en 1h</span>
+  <span class="trust-sep">|</span>
+  <span class="trust-item">🇪🇺 Conforme RGPD</span>
+  <span class="trust-sep">|</span>
+  <span class="trust-item">📱 100% Mobile</span>
+</div>
+
+<!-- ═══ ADSENSE 3 ═══ -->
+<div class="ad-bar">
+  <div class="container">
+    <div class="ad-slot ad-728">
+      <!-- Google AdSense · footer-leaderboard-728x90 -->
+      <span>📢 Espace Publicitaire — Google AdSense (728×90)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta-sec">
+  <div class="cta-glow"></div>
+  <div class="container" style="position:relative;z-index:1;text-align:center">
+    <h2 class="fade-up" style="color:#fff">Prêt à transformer<br>vos documents ?</h2>
+    <p class="fade-up delay-1">Rejoignez des milliers de professionnels qui font confiance à PDFOX. Gratuit, rapide, sécurisé.</p>
+    <a href="#tools" class="btn-primary fade-up delay-2">🚀 Commencer gratuitement</a>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="margin-bottom:14px;display:inline-flex">
+          <div class="logo-icon">🦊</div>
+          <span class="logo-text">PDF<span class="logo-accent">OX</span>.io</span>
+        </a>
+        <p>La suite PDF la plus complète du web. Convertissez, compressez, fusionnez et analysez gratuitement, propulsé par l'IA Claude.</p>
+        <div class="footer-socials">
+          <a href="#" title="Facebook">📘</a>
+          <a href="#" title="TikTok">🎵</a>
+          <a href="#" title="LinkedIn">💼</a>
+          <a href="#" title="YouTube">▶️</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Outils PDF</h4>
+        <a href="pages/tool.html?tool=pdf-to-word">PDF vers Word</a>
+        <a href="pages/tool.html?tool=word-to-pdf">Word vers PDF</a>
+        <a href="pages/tool.html?tool=compress">Compresser PDF</a>
+        <a href="pages/tool.html?tool=merge">Fusionner PDF</a>
+        <a href="pages/tool.html?tool=split">Diviser PDF</a>
+        <a href="pages/tool.html?tool=sign">Signer PDF</a>
+        <a href="pages/tool.html?tool=protect">Protéger PDF</a>
+        <a href="pages/tool.html?tool=ocr">OCR PDF</a>
+      </div>
+      <div class="footer-col">
+        <h4>Outils IA</h4>
+        <a href="pages/ai-summarizer.html">Résumeur IA</a>
+        <a href="pages/ai-chat.html">Chat PDF IA</a>
+        <a href="pages/ai-rewrite.html">Réécriture IA</a>
+        <a href="pages/ai-metadata.html">Extracteur IA</a>
+        <h4 style="margin-top:20px">Ressources</h4>
+        <a href="pages/blog.html">Blog PDF</a>
+        <a href="pages/about.html">À propos</a>
+        <a href="pages/contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Légal</h4>
+        <a href="pages/privacy.html">Confidentialité</a>
+        <a href="pages/terms.html">CGU</a>
+        <a href="pages/contact.html">Signaler un bug</a>
+        <h4 style="margin-top:20px">Langue</h4>
+        <select class="lang-sel" onchange="if(this.value==='en')alert('English version coming soon!')">
+          <option value="fr">🇫🇷 Français</option>
+          <option value="en">🇬🇧 English</option>
+        </select>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 PDFOX.io — Tous droits réservés · Propulsé par <strong style="color:#3B82FF">Claude AI · Anthropic</strong></span>
+      <div class="footer-links">
+        <a href="pages/privacy.html">Confidentialité</a>
+        <a href="pages/terms.html">CGU</a>
+        <a href="pages/contact.html">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══ COOKIE ═══ -->
+<div class="cookie" id="cookieBanner">
+  <span class="cookie-ico">🍪</span>
+  <p>Nous utilisons des cookies pour améliorer votre expérience et afficher des publicités via <strong>Google AdSense</strong>. <a href="pages/privacy.html">En savoir plus</a></p>
+  <div class="cookie-btns">
+    <button onclick="acceptCookie()">Accepter</button>
+    <button class="cookie-ref" onclick="declineCookie()">Refuser</button>
+  </div>
+</div>
+
+<script src="js/tools.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
