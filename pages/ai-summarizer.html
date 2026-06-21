@@ -110,7 +110,7 @@ async function handleFile(files) {
   }
 }
 
-// LA FONCTION CORRIGÉE EST ICI
+// LA FONCTION CORRIGÉE AU BON FORMAT GROQ EST ICI
 async function analyze() {
   if (!pdfText) { alert('Veuillez d\'abord selectionner un PDF.'); return; }
   if (aiRemaining() <= 0) { alert('Limite atteinte. Revenez demain !'); return; }
@@ -121,23 +121,33 @@ async function analyze() {
   document.getElementById('resultBox').style.display = 'none';
 
   try {
-    // Appel sécurisé vers votre serveur Vercel (contourne le blocage)
+    var systemPrompt = 'Tu es un expert en analyse documentaire. Reponds UNIQUEMENT en JSON valide, sans markdown ni backticks. Format exact: {"titre":"titre","type":"type","langue":"langue","resume":"resume en 2-3 phrases","points_cles":["point1","point2","point3"],"ton":"ton","temps_lecture":"X min"}';
+
+    // Appel sécurisé vers votre serveur Vercel avec le format exact exigé par Groq
     var response = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: pdfText })
+      body: JSON.stringify({
+        model: "llama-3.1-8b-instant",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: "Analyse ce document :\n\n" + pdfText }
+        ]
+      })
     });
 
     var data = await response.json();
     
     if (data.error) {
-      throw new Error(data.error);
+      throw new Error(data.error.message || data.error);
     }
 
-    var rawText = data.summary || data.text || JSON.stringify(data);
+    // Récupération intelligente selon le format renvoyé par le proxy de Claude
+    var rawText = data.summary || data.text || (data.choices && data.choices[0].message.content) || JSON.stringify(data);
 
     var result;
-    try { result = JSON.parse(rawText.replace(/```json|```/g, '').trim()); }
+    try { result = JSON.parse(rawText.replace(/json|
+/g, '').trim()); }
     catch (e) { result = { titre: fileName, type: '—', langue: '—', resume: rawText, points_cles: [], ton: '—', temps_lecture: '—' }; }
 
     incAiUsage();
