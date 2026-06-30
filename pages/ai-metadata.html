@@ -3,9 +3,12 @@
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Extracteur IA — Métadonnées PDF — PDFOX.io</title>
+  <meta name="description" content="Analysez automatiquement vos PDF avec l'IA : type de document, langue, données sensibles, mots-clés et registre. Gratuit, 5 analyses/jour, sans inscription."/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/style.css"/>
+  <!-- ===== GOOGLE ADSENSE — remplacez ca-pub-XXXXXXXXXXXXXXXX par votre ID éditeur AdSense ===== -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body class="ai-page-bg">
@@ -48,8 +51,13 @@
     </div>
 
     <div style="margin:28px 0">
-      <div class="ad-slot" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.03);color:rgba(255,255,255,.3);min-height:90px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:13px">
-        <!-- AdSense · ai-metadata --><span>📢 Espace Publicitaire — Google AdSense</span>
+      <div class="ad-slot" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.03);color:rgba(255,255,255,.3);min-height:90px;border-radius:12px">
+        <!-- AdSense · ai-metadata — remplacez data-ad-slot par l'ID réel de ce bloc -->
+        <ins class="adsbygoogle" style="display:block;width:100%"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="4000000003"
+             data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <span class="ad-fallback">📢 Espace Publicitaire — Google AdSense</span>
       </div>
     </div>
 
@@ -73,6 +81,20 @@
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 let pdfText='',fileName='';
+function getAiUsage(){
+  const today=new Date().toISOString().split('T')[0];
+  const usage=JSON.parse(localStorage.getItem('pdfox_usage')||'{}');
+  if(usage.date!==today)return 0;
+  return usage.count||0;
+}
+function incAiUsage(){
+  const today=new Date().toISOString().split('T')[0];
+  const count=getAiUsage();
+  localStorage.setItem('pdfox_usage',JSON.stringify({date:today,count:count+1}));
+}
+function aiRemaining(){
+  return Math.max(0,5-getAiUsage());
+}
 function showUsage(){const r=aiRemaining();document.getElementById('usageTxt').textContent=r+' analyse'+(r>1?'s':'')+' gratuite'+(r>1?'s':'')+' restante'+(r>1?'s':'')+' aujourd\'hui';}
 showUsage();
 initDragDrop('uploadZone','fileInput',handleFile);
@@ -97,18 +119,28 @@ async function extract(){
   document.getElementById('loader').style.display='block';
   document.getElementById('resultBox').style.display='none';
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    const res=await fetch('/api/chat',{
       method:'POST',
-      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:800,
         system:`Analyse ce document et réponds UNIQUEMENT en JSON valide sans markdown.
 Format: {"type":"type de document","langue":"langue principale","sujet":"sujet principal en 1 phrase","auteur":"auteur si détectable, sinon Inconnu","date":"date si détectable, sinon Inconnue","mots_cles":["mot1","mot2","mot3"],"donnees_sensibles":["liste des types de données sensibles trouvées ou [] si aucune"],"registre":"formel/technique/académique/informel","longueur_estimee":"court/moyen/long"}`,
-        messages:[{role:'user',content:'Document :\n\n'+pdfText}]
+        messages:[{role:'user',content:'Document :\n\n'+pdfText}],
+        max_tokens:800
       })
     });
-    const data=await res.json();
-    const raw=data.content?.find(b=>b.type==='text')?.text||'{}';
+
+    let data;
+    try{ data=await res.json(); }catch{ data=null; }
+
+    if(!res.ok || !data){
+      throw new Error((data && data.error) || 'Le serveur a renvoyé une réponse invalide.');
+    }
+    if(data.error){
+      throw new Error(typeof data.error==='string'?data.error:(data.error.message||'Erreur API'));
+    }
+
+    const raw=(typeof data.content==='string' && data.content) ? data.content : '{}';
     let r;try{r=JSON.parse(raw.replace(/```json|```/g,'').trim());}catch{r={};}
     incAiUsage();showUsage();
     const grid=document.getElementById('metaGrid');
@@ -130,7 +162,7 @@ Format: {"type":"type de document","langue":"langue principale","sujet":"sujet p
       ss.innerHTML=`<div class="r-item" style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3)"><strong>✅ Aucune donnée sensible</strong> détectée dans ce document.</div>`;
     }
     document.getElementById('resultBox').style.display='block';
-  }catch{alert('Erreur. Réessayez.');btn.disabled=false;}
+  }catch(e){alert('Erreur : '+(e.message||'la connexion a échoué. Réessayez.'));btn.disabled=false;}
   document.getElementById('loader').style.display='none';
 }
 function resetForm(){

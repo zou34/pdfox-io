@@ -3,10 +3,13 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Resumeur IA — PDFOX.io</title>
+  <title>Résumeur PDF IA Gratuit — Résumé Automatique de Document | PDFOX.io</title>
+  <meta name="description" content="Résumez n'importe quel PDF en quelques secondes grâce à l'IA : titre, points clés, ton et temps de lecture. Gratuit, 5 analyses/jour, sans inscription."/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/style.css"/>
+  <!-- ===== GOOGLE ADSENSE — remplacez ca-pub-XXXXXXXXXXXXXXXX par votre ID éditeur AdSense ===== -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body class="ai-page-bg">
@@ -38,53 +41,60 @@
       </div>
       <div class="ai-file-info" id="fileInfo"></div>
       <button class="ai-act-btn" id="actBtn" onclick="analyze()">✨ Analyser avec l'IA</button>
-      <div class="ai-loader" id="loader">
-        <div class="ai-dots"><span></span><span></span><span></span></div>
-        <p>L'IA analyse votre document...</p>
+      
+      <div class="ai-loader" id="loader" style="display:none; text-align:center; padding: 20px;">
+        <p>⏳ L'IA analyse votre document en toute sécurité, merci de patienter...</p>
       </div>
-      <div class="ai-result" id="resultBox">
+
+      <div class="ad-slot" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.03);color:rgba(255,255,255,.3);min-height:90px;border-radius:12px;margin:18px 0">
+        <!-- AdSense · ai-summarizer-mid — remplacez data-ad-slot par l'ID réel de ce bloc -->
+        <ins class="adsbygoogle" style="display:block;width:100%"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="4000000004"
+             data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <span class="ad-fallback">📢 Espace Publicitaire — Google AdSense</span>
+      </div>
+
+      <div class="ai-result" id="resultBox" style="display:none;">
         <h3>📋 Resume de votre document</h3>
         <div id="resultContent"></div>
-        <button class="rst-btn" onclick="resetForm()">🔄 Analyser un autre document</button>
+        <button class="rst-btn" onclick="resetForm()" style="margin-top:20px; padding:10px 20px; background:var(--navy); color:white; border:none; border-radius:8px; cursor:pointer;">🔄 Analyser un autre document</button>
       </div>
-      <div class="usage-txt" id="usageTxt"></div>
-    </div>
-
-    <div style="margin:28px 0">
-      <div class="ad-slot" style="min-height:90px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:13px;color:rgba(255,255,255,.3)">
-        📢 Espace Publicitaire — Google AdSense
-      </div>
-    </div>
-
-    <h3 style="font-family:'Syne',sans-serif;color:#fff;font-size:18px;margin-bottom:16px">Autres outils IA</h3>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:48px">
-      <a href="ai-chat.html" class="ai-card" style="padding:22px"><span style="font-size:30px;display:block;margin-bottom:10px">💬</span><h3 style="font-size:15px">Chat PDF IA</h3></a>
-      <a href="ai-rewrite.html" class="ai-card" style="padding:22px"><span style="font-size:30px;display:block;margin-bottom:10px">✏️</span><h3 style="font-size:15px">Reecriture IA</h3></a>
-      <a href="ai-metadata.html" class="ai-card" style="padding:22px"><span style="font-size:30px;display:block;margin-bottom:10px">🔎</span><h3 style="font-size:15px">Extracteur IA</h3></a>
+      <div class="usage-txt" id="usageTxt" style="text-align:center; margin-top:15px; font-size:13px; color:rgba(255,255,255,0.5);"></div>
     </div>
   </div>
 </div>
 
-<footer style="background:var(--navy);padding:28px 24px">
-  <div style="max-width:760px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid rgba(255,255,255,.07);padding-top:24px">
-    <a href="../index.html" class="nav-logo"><div class="logo-icon">🦊</div><span class="logo-text">PDF<span class="logo-accent">OX</span>.io</span></a>
-    <span style="color:rgba(255,255,255,.3);font-size:13px">© 2026 PDFOX.io</span>
-  </div>
-</footer>
-
 <script src="../js/main.js"></script>
-<script src="../js/ai.js"></script>
+
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 var pdfText = '', fileName = '';
 
+function getAiUsage() {
+  var today = new Date().toISOString().split('T')[0];
+  var usage = JSON.parse(localStorage.getItem('pdfox_usage') || '{}');
+  if (usage.date !== today) return 0;
+  return usage.count || 0;
+}
+function incAiUsage() {
+  var today = new Date().toISOString().split('T')[0];
+  var count = getAiUsage();
+  localStorage.setItem('pdfox_usage', JSON.stringify({date: today, count: count + 1}));
+}
+function aiRemaining() {
+  return Math.max(0, 5 - getAiUsage());
+}
 function showUsage() {
-  var r = aiRemaining();
-  document.getElementById('usageTxt').textContent = r + ' analyse(s) gratuite(s) restante(s) aujourd\'hui';
+  var el = document.getElementById('usageTxt');
+  if (el) el.textContent = aiRemaining() + ' analyse(s) gratuite(s) restante(s) aujourd\'hui';
 }
 showUsage();
 
-initDragDrop('uploadZone', 'fileInput', handleFile);
+var fileInput = document.getElementById('fileInput');
+var uploadZone = document.getElementById('uploadZone');
+uploadZone.onclick = function() { fileInput.click(); };
+fileInput.onchange = function(e) { handleFile(e.target.files); };
 
 async function handleFile(files) {
   var file = files[0];
@@ -93,6 +103,7 @@ async function handleFile(files) {
   var info = document.getElementById('fileInfo');
   info.style.display = 'block';
   info.textContent = '⏳ Extraction du texte de ' + file.name + '...';
+  
   try {
     var ab = await file.arrayBuffer();
     var pdf = await pdfjsLib.getDocument(ab).promise;
@@ -103,14 +114,13 @@ async function handleFile(files) {
       text += ct.items.map(function(it) { return it.str; }).join(' ') + '\n';
     }
     pdfText = text.trim().substring(0, 15000);
-    info.textContent = '✅ ' + file.name + ' — ' + pdf.numPages + ' page(s) — Texte extrait';
+    info.textContent = '✅ ' + file.name + ' — ' + pdf.numPages + ' page(s) — Texte extrait avec succès';
     document.getElementById('actBtn').style.display = 'block';
   } catch (e) {
-    info.textContent = '❌ Impossible d\'extraire le texte. PDF protege ?';
+    info.textContent = '❌ Impossible d\'extraire le texte. Le PDF est peut-être protégé.';
   }
 }
 
-// LA FONCTION CORRIGÉE AU BON FORMAT GROQ EST ICI
 async function analyze() {
   if (!pdfText) { alert('Veuillez d\'abord selectionner un PDF.'); return; }
   if (aiRemaining() <= 0) { alert('Limite atteinte. Revenez demain !'); return; }
@@ -121,50 +131,66 @@ async function analyze() {
   document.getElementById('resultBox').style.display = 'none';
 
   try {
-    var systemPrompt = 'Tu es un expert en analyse documentaire. Reponds UNIQUEMENT en JSON valide, sans markdown ni backticks. Format exact: {"titre":"titre","type":"type","langue":"langue","resume":"resume en 2-3 phrases","points_cles":["point1","point2","point3"],"ton":"ton","temps_lecture":"X min"}';
+    var systemPrompt = 'Tu es un expert en analyse documentaire. Reponds UNIQUEMENT en JSON valide, sans markdown. Format exact: {"titre":"titre","type":"type","langue":"langue","resume":"resume en 2-3 phrases","points_cles":["point1","point2","point3"],"ton":"ton","temps_lecture":"X min"}';
 
-    // Appel sécurisé vers votre serveur Vercel avec le format exact exigé par Groq
     var response = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: "llama-3.1-8b-instant",
+        system: systemPrompt,
         messages: [
-          { role: "system", content: systemPrompt },
           { role: "user", content: "Analyse ce document :\n\n" + pdfText }
-        ]
+        ],
+        max_tokens: 800
       })
     });
 
-    var data = await response.json();
-    
+    var data = null;
+    try { data = await response.json(); } catch (e) { data = null; }
+
+    if (!response.ok || !data) {
+      throw new Error((data && data.error) || 'Le serveur a renvoyé une réponse invalide.');
+    }
     if (data.error) {
-      throw new Error(data.error.message || data.error);
+      throw new Error(typeof data.error === 'string' ? data.error : (data.error.message || 'Erreur API'));
     }
 
-    // Récupération intelligente selon le format renvoyé par le proxy de Claude
-    var rawText = data.summary || data.text || (data.choices && data.choices[0].message.content) || JSON.stringify(data);
+    var rawText = (typeof data.content === 'string' && data.content) ? data.content : '';
+    if (!rawText) throw new Error('Réponse vide de l\'IA.');
+
+    // Nettoyage anti-bug : retire les balises de code markdown si l'IA en ajoute malgré la consigne
+    var textClean = rawText.trim();
+    if (textClean.indexOf('```') === 0) {
+        textClean = textClean.replace(/^```json/i, '').replace(/^```/, '');
+        if (textClean.endsWith('```')) {
+            textClean = textClean.substring(0, textClean.length - 3);
+        }
+    }
+    textClean = textClean.trim();
 
     var result;
-    try { result = JSON.parse(rawText.replace(/json|
-/g, '').trim()); }
-    catch (e) { result = { titre: fileName, type: '—', langue: '—', resume: rawText, points_cles: [], ton: '—', temps_lecture: '—' }; }
+    try { 
+        result = JSON.parse(textClean); 
+    } catch (e) { 
+        result = { titre: fileName, type: '—', langue: '—', resume: textClean, points_cles: [], ton: '—', temps_lecture: '—' }; 
+    }
 
     incAiUsage();
     showUsage();
 
     document.getElementById('resultContent').innerHTML =
-      '<div class="r-item"><strong>📄 Titre:</strong> ' + (result.titre || '—') + '</div>' +
-      '<div class="r-item"><strong>📂 Type:</strong> ' + (result.type || '—') + ' | <strong>🌐 Langue:</strong> ' + (result.langue || '—') + ' | <strong>⏱️ Lecture:</strong> ' + (result.temps_lecture || '—') + '</div>' +
-      '<div class="r-item"><strong>📝 Resume:</strong><br><span style="color:rgba(255,255,255,.7)">' + (result.resume || '—') + '</span></div>' +
-      (result.points_cles && result.points_cles.length ? '<div class="r-item"><strong>🎯 Points cles:</strong><ul>' + result.points_cles.map(function(p) { return '<li>' + p + '</li>'; }).join('') + '</ul></div>' : '') +
-      '<div class="r-item"><strong>🎭 Ton:</strong> ' + (result.ton || '—') + '</div>';
+      '<div style="margin-bottom:10px;"><strong>📄 Titre:</strong> ' + (result.titre || '—') + '</div>' +
+      '<div style="margin-bottom:10px;"><strong>📂 Infos:</strong> ' + (result.type || '—') + ' | ' + (result.langue || '—') + ' | ⏱️ ' + (result.temps_lecture || '—') + '</div>' +
+      '<div style="margin-bottom:10px;"><strong>📝 Resume:</strong><br><span style="color:rgba(255,255,255,.7)">' + (result.resume || '—') + '</span></div>' +
+      (result.points_cles && result.points_cles.length ? '<div style="margin-bottom:10px;"><strong>🎯 Points cles:</strong><ul style="margin-top:5px; padding-left:20px;">' + result.points_cles.map(function(p) { return '<li style="margin-bottom:5px;">' + p + '</li>'; }).join('') + '</ul></div>' : '');
+    
     document.getElementById('resultBox').style.display = 'block';
 
   } catch (e) {
-    alert('Erreur: ' + (e.message || 'Reessayez.'));
-    btn.disabled = false;
+    alert('Erreur: ' + (e.message || 'La connexion a échoué.'));
   }
+  
+  btn.disabled = false;
   document.getElementById('loader').style.display = 'none';
 }
 
@@ -172,10 +198,8 @@ function resetForm() {
   pdfText = ''; fileName = '';
   document.getElementById('fileInfo').style.display = 'none';
   document.getElementById('actBtn').style.display = 'none';
-  document.getElementById('actBtn').disabled = false;
   document.getElementById('resultBox').style.display = 'none';
   document.getElementById('fileInput').value = '';
-  showUsage();
 }
 </script>
 </body>

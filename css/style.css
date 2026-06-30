@@ -165,15 +165,31 @@ h1{
 .stat-sep{width:1px;height:36px;background:rgba(255,255,255,.15)}
 
 /* ── ADSENSE ── */
-.ad-bar{padding:16px 24px;border-bottom:1px solid var(--border);background:var(--off)}
+.ad-bar{padding:8px 24px;border-bottom:1px solid var(--border);background:var(--off)}
+/* Conteneur publicitaire : position:relative pour que .ad-fallback soit centré en absolu */
 .ad-slot{
-  background:rgba(0,87,255,.04);border:1.5px dashed rgba(0,87,255,.2);
-  border-radius:var(--r2);display:flex;align-items:center;justify-content:center;
-  color:var(--gray);font-size:13px;font-weight:500;
+  background:rgba(0,87,255,.04);
+  border:1.5px dashed rgba(0,87,255,.2);
+  border-radius:var(--r2);
+  position:relative;
+  overflow:hidden;
+  box-sizing:border-box;
+  width:100%;
 }
-.ad-728{min-height:90px;max-width:740px;margin:0 auto}
-.ad-336{min-height:250px;max-width:336px}
-.ad-300{min-height:250px;max-width:300px}
+.ad-728{min-height:90px;max-width:728px;margin:0 auto}
+.ad-336{min-height:250px;max-width:336px;margin:0 auto}
+.ad-300{min-height:250px;max-width:300px;margin:0 auto}
+/* Wrapper autonome pour les blocs publicitaires hors ad-bar */
+.ad-wrap{margin:3rem auto;max-width:728px;width:100%;padding:0 16px;box-sizing:border-box}
+/* Texte placeholder centré en absolu — à supprimer du HTML une fois les annonces actives */
+.ad-fallback{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  color:inherit;font-size:12px;font-weight:500;
+  white-space:nowrap;pointer-events:none;
+  z-index:0;text-align:center;
+  width:max-content;max-width:90%;
+}
 
 /* ── CONTAINER ── */
 .container{max-width:1180px;margin:0 auto;padding:0 24px}
@@ -691,4 +707,18 @@ textarea{resize:vertical;min-height:140px}
   .cookie-ico{display:none}
   .cookie-btns{width:100%}
   .cookie-btns button{flex:1;text-align:center}
+}
+/* ── ADSENSE RESPONSIVE ── */
+@media(max-width:768px){
+  .ad-728{min-height:60px}
+  .ad-wrap{padding:0 12px;margin:2rem auto}
+}
+@media(max-width:480px){
+  /* Empêche tout débordement horizontal sur mobile */
+  .ad-slot,.ad-728,.ad-336,.ad-300{
+    max-width:100%;overflow:hidden;
+  }
+  .ad-728{min-height:50px}
+  .ad-336,.ad-300{min-height:200px;max-width:100%}
+  .ad-bar{padding:6px 12px}
 }

@@ -2,10 +2,13 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Réécriture IA — Simplifiez vos textes PDF — PDFOX.io</title>
+  <title>Réécriture IA — Simplifiez, Formalisez ou Traduisez vos Textes PDF | PDFOX.io</title>
+  <meta name="description" content="Réécrivez un texte extrait de votre PDF en un clic avec l'IA : simplifier, formaliser, résumer, traduire ou transformer en bullet points. Gratuit, sans inscription."/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/style.css"/>
+  <!-- ===== GOOGLE ADSENSE — remplacez ca-pub-XXXXXXXXXXXXXXXX par votre ID éditeur AdSense ===== -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 </head>
 <body class="ai-page-bg">
 <nav id="navbar">
@@ -67,8 +70,13 @@
     </div>
 
     <div style="margin:28px 0">
-      <div class="ad-slot" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.03);color:rgba(255,255,255,.3);min-height:90px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:13px">
-        <!-- AdSense · ai-rewrite --><span>📢 Espace Publicitaire — Google AdSense</span>
+      <div class="ad-slot" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.03);color:rgba(255,255,255,.3);min-height:90px;border-radius:12px">
+        <!-- AdSense · ai-rewrite — remplacez data-ad-slot par l'ID réel de ce bloc -->
+        <ins class="adsbygoogle" style="display:block;width:100%"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="4000000002"
+             data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <span class="ad-fallback">📢 Espace Publicitaire — Google AdSense</span>
       </div>
     </div>
 
@@ -116,6 +124,21 @@ document.getElementById('inputText').addEventListener('input',function(){
   document.getElementById('charCnt').textContent=this.value.length;
 });
 
+function getAiUsage(){
+  const today=new Date().toISOString().split('T')[0];
+  const usage=JSON.parse(localStorage.getItem('pdfox_usage')||'{}');
+  if(usage.date!==today)return 0;
+  return usage.count||0;
+}
+function incAiUsage(){
+  const today=new Date().toISOString().split('T')[0];
+  const count=getAiUsage();
+  localStorage.setItem('pdfox_usage',JSON.stringify({date:today,count:count+1}));
+}
+function aiRemaining(){
+  return Math.max(0,5-getAiUsage());
+}
+
 function showUsage(){
   const r=aiRemaining();
   document.getElementById('usageTxt').textContent=r+' réécriture'+(r>1?'s':'')+' gratuite'+(r>1?'s':'')+' restante'+(r>1?'s':'')+' aujourd\'hui';
@@ -131,25 +154,37 @@ async function rewrite(){
   document.getElementById('loader').style.display='block';
   document.getElementById('resultBox').style.display='none';
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    const res=await fetch('/api/chat',{
       method:'POST',
-      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:800,
         system:'Tu es un expert en rédaction et communication. Réponds uniquement avec le texte réécrit, sans introduction ni explication.',
-        messages:[{role:'user',content:MODES[currentMode].prompt+'\n\nTexte :\n'+text}]
+        messages:[{role:'user',content:MODES[currentMode].prompt+'\n\nTexte :\n'+text}],
+        max_tokens:800
       })
     });
-    const data=await res.json();
-    const result=data.content?.find(b=>b.type==='text')?.text||'Erreur lors de la réécriture.';
+
+    let data;
+    try{ data=await res.json(); }catch{ data=null; }
+
+    if(!res.ok || !data){
+      throw new Error((data && data.error) || 'Le serveur a renvoyé une réponse invalide.');
+    }
+    if(data.error){
+      throw new Error(typeof data.error==='string'?data.error:(data.error.message||'Erreur API'));
+    }
+
+    const result=(typeof data.content==='string' && data.content.trim())
+      ? data.content.trim()
+      : 'Erreur lors de la réécriture.';
+
     incAiUsage();showUsage();
     document.getElementById('resultText').textContent=result;
     document.getElementById('resultBox').style.display='block';
-  }catch{
-    alert('Erreur de connexion. Réessayez.');
-    btn.disabled=false;
+  }catch(e){
+    alert('Erreur : '+(e.message||'la connexion a échoué. Réessayez.'));
   }
+  btn.disabled=false;
   document.getElementById('loader').style.display='none';
 }
 

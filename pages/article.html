@@ -4,9 +4,12 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title id="pageTitle">Article Blog — PDFOX.io</title>
+  <meta name="description" id="pageDesc" content="Guides et astuces pratiques pour convertir, compresser, signer et analyser vos PDF avec l'IA — par PDFOX.io."/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/style.css"/>
+  <!-- ===== GOOGLE ADSENSE — remplacez ca-pub-XXXXXXXXXXXXXXXX par votre ID éditeur AdSense ===== -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
   <style>
     .art-hero{background:linear-gradient(160deg,#060C22 0%,#0D1535 60%,#091540 100%);padding:60px 24px 70px;position:relative;overflow:hidden;}
     .art-hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,87,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(0,87,255,.07) 1px,transparent 1px);background-size:40px 40px;}
@@ -93,8 +96,13 @@
     <a href="../index.html#tools" class="cta-link" id="ctaLink">🚀 Découvrir les outils</a>
   </div>
 
-  <div style="margin:32px 0;min-height:90px;background:rgba(0,87,255,.04);border:1.5px dashed rgba(0,87,255,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#8899BB;font-size:13px">
-    📢 Espace Publicitaire — Google AdSense
+  <div class="ad-slot ad-728" style="margin:32px auto">
+    <!-- AdSense · article-in-content — remplacez data-ad-slot par l'ID réel de ce bloc -->
+    <ins class="adsbygoogle" style="display:block;width:100%"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="5000000001"
+         data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    <span class="ad-fallback">📢 Espace Publicitaire — Google AdSense</span>
   </div>
 
   <div>
@@ -114,7 +122,7 @@
       <a href="terms.html" style="color:rgba(255,255,255,.4)">CGU</a>
       <a href="contact.html" style="color:rgba(255,255,255,.4)">Contact</a>
     </div>
-    <span style="color:rgba(255,255,255,.3);font-size:13px">2026 PDFOX.io</span>
+    <span style="color:rgba(255,255,255,.3);font-size:13px">© 2026 PDFOX.io</span>
   </div>
 </footer>
 
@@ -213,6 +221,7 @@ if (!art) {
 }
 
 document.getElementById('pageTitle').textContent = art.title + ' — PDFOX.io';
+document.getElementById('pageDesc').setAttribute('content', art.intro);
 document.getElementById('artTitle').textContent = art.title;
 document.getElementById('artIntro').textContent = art.intro;
 document.getElementById('artCat').textContent = art.cat;

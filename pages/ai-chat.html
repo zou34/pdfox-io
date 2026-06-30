@@ -7,6 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/style.css"/>
+  <!-- ===== GOOGLE ADSENSE — remplacez ca-pub-XXXXXXXXXXXXXXXX par votre ID éditeur AdSense ===== -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body class="ai-page-bg">
@@ -74,8 +76,13 @@
     </div>
 
     <div style="margin:28px 0">
-      <div class="ad-slot" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.03);color:rgba(255,255,255,.3);min-height:90px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:13px">
-        <!-- AdSense · ai-chat --><span>📢 Espace Publicitaire — Google AdSense</span>
+      <div class="ad-slot" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.03);color:rgba(255,255,255,.3);min-height:90px;border-radius:12px">
+        <!-- AdSense · ai-chat — remplacez data-ad-slot par l'ID réel de ce bloc -->
+        <ins class="adsbygoogle" style="display:block;width:100%"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="4000000001"
+             data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <span class="ad-fallback">📢 Espace Publicitaire — Google AdSense</span>
       </div>
     </div>
 
@@ -104,6 +111,21 @@
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 let pdfText='',history=[];
+
+function getAiUsage(){
+  const today=new Date().toISOString().split('T')[0];
+  const usage=JSON.parse(localStorage.getItem('pdfox_usage')||'{}');
+  if(usage.date!==today)return 0;
+  return usage.count||0;
+}
+function incAiUsage(){
+  const today=new Date().toISOString().split('T')[0];
+  const count=getAiUsage();
+  localStorage.setItem('pdfox_usage',JSON.stringify({date:today,count:count+1}));
+}
+function aiRemaining(){
+  return Math.max(0,5-getAiUsage());
+}
 
 function showUsage(){
   const r=aiRemaining();
@@ -156,28 +178,44 @@ async function sendMsg(){
   history.push({role:'user',content:q});
 
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:600,
-        system:`Tu es un assistant expert qui répond aux questions sur un document PDF.
+    const systemPrompt=`Tu es un assistant expert qui répond aux questions sur un document PDF.
 Réponds en français de manière concise et précise.
 Cite les numéros de page quand c'est pertinent (ex: "Selon la page 3...").
 Si l'information n'est pas dans le document, dis-le clairement.
-Voici le contenu du document :\n\n${pdfText}`,
-        messages:history
+Voici le contenu du document :\n\n${pdfText}`;
+
+    const res=await fetch('/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        messages:history,
+        system:systemPrompt,
+        max_tokens:600
       })
     });
-    const data=await res.json();
-    const answer=data.content?.find(b=>b.type==='text')?.text||'Désolé, je n\'ai pas pu analyser ce document.';
+
+    let data;
+    try{ data=await res.json(); }catch{ data=null; }
+
+    if(!res.ok || !data){
+      throw new Error((data && data.error) || 'Le serveur a renvoyé une réponse invalide.');
+    }
+    if(data.error){
+      throw new Error(typeof data.error==='string'?data.error:(data.error.message||'Erreur API'));
+    }
+
+    const answer=(typeof data.content==='string' && data.content.trim())
+      ? data.content.trim()
+      : 'Désolé, je n\'ai pas pu analyser ce document.';
+
     history.push({role:'assistant',content:answer});
     incAiUsage();showUsage();
     typing.textContent=answer;
     typing.querySelector('strong').textContent='🤖 Assistant PDFOX';
-  }catch{
-    typing.textContent='Erreur de connexion. Vérifiez votre connexion et réessayez.';
+  }catch(e){
+    history.pop();
+    typing.textContent='Erreur : '+(e.message||'la connexion a échoué. Réessayez.');
+    typing.querySelector('strong').textContent='🤖 Assistant PDFOX';
   }
   scrollChat();
 }
