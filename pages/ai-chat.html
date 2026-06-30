@@ -210,12 +210,10 @@ Voici le contenu du document :\n\n${pdfText}`;
 
     history.push({role:'assistant',content:answer});
     incAiUsage();showUsage();
-    typing.textContent=answer;
-    typing.querySelector('strong').textContent='🤖 Assistant PDFOX';
+    typing.innerHTML=`<strong>🤖 Assistant PDFOX</strong>${answer}`;
   }catch(e){
     history.pop();
-    typing.textContent='Erreur : '+(e.message||'la connexion a échoué. Réessayez.');
-    typing.querySelector('strong').textContent='🤖 Assistant PDFOX';
+    typing.innerHTML=`<strong>🤖 Assistant PDFOX</strong>Erreur : ${e.message||'la connexion a échoué. Réessayez.'}`;
   }
   scrollChat();
 }
