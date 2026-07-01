@@ -7,6 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/style.css"/>
+  <!-- Supabase JS SDK (UMD — pas de bundler requis) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 <nav id="navbar">
@@ -88,6 +90,10 @@
         <span style="font-size:28px;display:block;margin-bottom:8px">✅</span>
         Message envoyé ! Nous vous répondrons sous 24h.
       </div>
+      <div id="errorMsg" style="display:none;background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.3);border-radius:13px;padding:20px;text-align:center;color:#dc2626;font-weight:600;margin-top:16px">
+        <span style="font-size:28px;display:block;margin-bottom:8px">❌</span>
+        <span id="errorTxt">Une erreur est survenue. Veuillez réessayer.</span>
+      </div>
     </div>
 
   </div>
@@ -114,20 +120,68 @@
 </footer>
 <script src="../js/main.js"></script>
 <script>
-function submitForm(){
-  const f=document.getElementById('fname').value.trim(),l=document.getElementById('lname').value.trim(),
-    e=document.getElementById('email').value.trim(),s=document.getElementById('subject').value,
-    m=document.getElementById('message').value.trim(),c=document.getElementById('consent').checked;
-  if(!f||!l||!e||!s||!m){alert('Veuillez remplir tous les champs obligatoires (*).');return;}
-  if(!e.includes('@')){alert('Email invalide.');return;}
-  if(!c){alert('Veuillez accepter la politique de confidentialité.');return;}
-  if(m.length<10){alert('Message trop court.');return;}
-  const btn=document.getElementById('submitBtn');
-  btn.disabled=true;btn.textContent='⏳ Envoi en cours...';
-  setTimeout(()=>{
-    btn.style.display='none';
-    document.getElementById('successMsg').style.display='block';
-  },1500);
+// ─────────────────────────────────────────────────────────────────
+//  CONFIGURATION SUPABASE
+//  Collez vos valeurs depuis : Supabase Dashboard → Project Settings → API
+// ─────────────────────────────────────────────────────────────────
+const SUPABASE_URL      = 'https://kniepbhjafnzepwdmtzt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuaWVwYmhqYWZuemVwd2RtdHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI5MTUxNzMsImV4cCI6MjA5ODQ5MTE3M30.lBA0vhcUIuy5TfwdJCf_lpWLHcx8K-3MJGbXRFO8qN8';
+
+// Initialisation du client (le SDK UMD expose window.supabase)
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ─────────────────────────────────────────────────────────────────
+//  SOUMISSION DU FORMULAIRE
+// ─────────────────────────────────────────────────────────────────
+async function submitForm() {
+  // 1. Lecture des champs
+  const prenom  = document.getElementById('fname').value.trim();
+  const nom     = document.getElementById('lname').value.trim();
+  const email   = document.getElementById('email').value.trim();
+  const sujet   = document.getElementById('subject').value;
+  const message = document.getElementById('message').value.trim();
+  const consent = document.getElementById('consent').checked;
+
+  // 2. Validation côté client (aucune donnée invalide n'atteint Supabase)
+  if (!prenom || !nom || !email || !sujet || !message) {
+    alert('Veuillez remplir tous les champs obligatoires (*).'); return;
+  }
+  if (!email.includes('@')) { alert('Email invalide.'); return; }
+  if (!consent) { alert('Veuillez accepter la politique de confidentialité.'); return; }
+  if (message.length < 10) { alert('Message trop court (minimum 10 caractères).'); return; }
+
+  // 3. État "chargement"
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Envoi en cours...';
+  document.getElementById('successMsg').style.display = 'none';
+  document.getElementById('errorMsg').style.display   = 'none';
+
+  // 4. Insertion dans Supabase (INSERT autorisé pour anon via RLS)
+  const { error } = await db.from('contact_messages').insert({
+    prenom, nom, email, sujet, message
+  });
+
+  // 5. Gestion de l'erreur
+  if (error) {
+    btn.disabled = false;
+    btn.textContent = '📨 Envoyer le message';
+    document.getElementById('errorTxt').textContent =
+      'Erreur : ' + (error.message || 'envoi impossible. Réessayez ou écrivez-nous par email.');
+    document.getElementById('errorMsg').style.display = 'block';
+    return;
+  }
+
+  // 6. Succès : afficher le message et vider le formulaire
+  btn.style.display = 'none';
+  document.getElementById('successMsg').style.display = 'block';
+  document.getElementById('fname').value     = '';
+  document.getElementById('lname').value     = '';
+  document.getElementById('email').value     = '';
+  document.getElementById('subject').value   = '';
+  document.getElementById('message').value   = '';
+  document.getElementById('cnt').textContent = '0';
+  document.getElementById('consent').checked = false;
 }
 </script>
 </body>
